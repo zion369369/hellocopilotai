@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Hello Copilot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --accent: #0668E1;
+            --border: #e2e8f0;
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-title: 'Outfit', sans-serif;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #020617;
+                --surface: #0f172a;
+                --text-primary: #f8fafc;
+                --text-secondary: #94a3b8;
+                --border: #1e293b;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .navbar {
+            padding: 24px 5%;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .navbar {
+                background-color: rgba(2, 6, 17, 0.8);
+            }
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-ring {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4285F4, #A142F4, #34A853);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-ring::after {
+            content: '';
+            position: absolute;
+            inset: 6px;
+            background: var(--bg);
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            font-family: var(--font-title);
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 64px auto;
+            padding: 0 24px;
+        }
+
+        header {
+            margin-bottom: 48px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 48px;
+        }
+
+        h1 {
+            font-family: var(--font-title);
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            margin-bottom: 16px;
+        }
+
+        .last-updated {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section {
+            margin-bottom: 48px;
+        }
+
+        h2 {
+            font-family: var(--font-title);
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        li {
+            padding-left: 28px;
+            position: relative;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+
+        li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        footer {
+            margin-top: 128px;
+            padding: 48px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 2.25rem;
+            }
+
+            .container {
+                margin: 32px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="/" class="logo-wrap">
+            <div class="logo-ring"></div>
+            <span class="logo-text">Hello Copilot</span>
+        </a>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Privacy Policy</h1>
+            <div class="last-updated">
+                <span>Last Updated: March 24, 2026</span>
+                <span>•</span>
+                <span>Version 1.0.0</span>
+            </div>
+        </header>
+
+        <section>
+            <p>Hello Copilot ("The Extension") is a browser-native AI assistant designed to provide localized,
+                zero-friction analytical support. We prioritize user privacy and data security as foundational
+                architectural pillars.</p>
+        </section>
+
+        <section>
+            <h2>1. Data Collection & Usage</h2>
+            <div class="card">
+                <ul>
+                    <li><strong>Contextual Data</strong>: The Extension processes the content of the active tab (DOM) to
+                        generate relevant AI suggestions and responses. This data is transmitted to the Gemini API via
+                        secure, encrypted channels (HTTPS).</li>
+                    <li><strong>No Persistence</strong>: Tab data is processed in real-time and is NOT stored on our
+                        servers. It exists only in volatile memory during the generation window.</li>
+                    <li><strong>Local Storage</strong>: We utilize chrome.storage.local to store your interaction
+                        preferences, daily usage counts, and episodic memories (last 10 interactions) locally on your
+                        device.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>2. Permissions Justification</h2>
+            <p>We believe in the principle of Least Privilege. Every permission we request is strictly necessary for our
+                core functionality:</p>
+            <ul>
+                <li><strong>sidePanel</strong>: To provide a persistent, non-intrusive analytical interface.</li>
+                <li><strong>storage</strong>: To save user preferences and local session history.</li>
+                <li><strong>scripting & &lt;all_urls&gt;</strong>: Required to inject the 'Floating Action Button' (FAB)
+                    and extract semantic page context from diverse web environments, ensuring a "Browser-Native"
+                    experience.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. Third-Party Services</h2>
+            <p>AI generation is powered by Google's Gemini systems. By using Hello Copilot, users agree to the terms of
+                the Gemini API environment. We do not use third-party tracking pixels, ads, or cookies.</p>
+        </section>
+
+        <section>
+            <h2>4. Security & Compliance</h2>
+            <div class="card">
+                <ul>
+                    <li><strong>XSS Protection</strong>: All AI-generated content is sanitized using DOMPurify before
+                        being rendered in the sidepanel.</li>
+                    <li><strong>Local Vault</strong>: Your episodic memory and preferences never leave your local
+                        machine.</li>
+                    <li><strong>No-Hassle Mode</strong>: We do not gatekeep performance or monetize user data through
+                        hidden trackers.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>5. Secure Transmission & Storage</h2>
+            <p>Following the **Purple Copper** policy requirements, we guarantee that all data handling meets modern
+                cryptographic standards:</p>
+            <ul>
+                <li><strong>Encryption in Transit</strong>: All communications between the extension and the Gemini API
+                    are encrypted via HTTPS (TLS 1.3).</li>
+                <li><strong>No Plaintext Exposure</strong>: Sensitive tokens and page contexts are never encoded in
+                    headers or query parameters.</li>
+                <li><strong>Local-First Persistence</strong>: User-specific data (memories) is stored exclusively using
+                    `chrome.storage.local`, ensuring it remains within your browser's secure sandbox.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>6. No Public Disclosure & Data Handling</h2>
+            <p>In accordance with **Purple Magnesium** policies, Hello Copilot enforces strict data boundaries:</p>
+            <ul>
+                <li><strong>No Sale of Data</strong>: We never sell, trade, or rent user data to third parties.</li>
+                <li><strong>No Telemetry</strong>: We do not collect web browsing activity, history, or cross-site
+                    identifiers for advertising purposes.</li>
+                <li><strong>Surgical Handling</strong>: Page extraction is restricted to the active tab only and is used
+                    solely to provide user-requested AI assistance.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>7. Single Purpose & Transparency</h2>
+            <p>Hello Copilot complies with the **Red Magnesium** (Single Purpose) policy. Its narrow and
+                easy-to-understand purpose is to serve as an AI-driven contextual assistant. It does not contain
+                unrelated bundles or deceptive installation tactics.</p>
+        </section>
+
+        <section>
+            <h2>8. User Control & Consent</h2>
+            <p>You have absolute control over your data. By installing and using the extension, you consent to the
+                processing of active tab data for AI analysis. You can revoke this consent at any time by uninstalling
+                the extension or clearing the "Episodic Memory" from the settings menu.</p>
+        </section>
+
+        <section>
+            <h2>9. Privacy Contact</h2>
+            <div class="card" style="text-align: center;">
+                <p>If you have questions about this policy or our data handling practices, please contact us at:</p>
+                <p><strong>privacy@helloworldgpt.com</strong></p>
+                <p>We aim to respond to all compliance inquiries within 48 hours.</p>
+            </div>
+        </section>
+
+        <section style="text-align: center;">
+            <p><em>Identity: PRIVATE. Architecture: SECURE. Model: COMPLIANT.</em></p>
+        </section>
+
+        <footer>
+            &copy; 2026 Hello Copilot | helloworldgpt.com | Chrome Web Store Compliant
+        </footer>
+    </div>
+</body>
+
+</html>

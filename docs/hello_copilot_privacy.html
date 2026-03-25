@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy & Compliance | Hello Copilot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FFFFFF;
+            --surface: #F8FAFC;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --accent: #4285F4;
+            --success: #10B981;
+            --border: #E2E8F0;
+            --radius-xl: 32px;
+            --radius-lg: 20px;
+            --font-main: 'Inter', sans-serif;
+            --font-title: 'Outfit', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* ═══ TOP NAVIGATION STYLE ═══ */
+        nav {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 48px);
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-family: var(--font-title);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .logo-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4285F4, #34A853);
+        }
+
+        /* ═══ HERO SECTION ═══ */
+        .hero {
+            text-align: center;
+            margin-bottom: 80px;
+            padding-top: 60px;
+        }
+
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            padding: 6px 14px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .badge-primary {
+            background: #EEF2FF;
+            color: #4338CA;
+            border: 1px solid #E0E7FF;
+        }
+
+        .badge-success {
+            background: #ECFDF5;
+            color: #047857;
+            border: 1px solid #D1FAE5;
+        }
+
+        h1 {
+            font-family: var(--font-title);
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .subtitle span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ═══ COMPLIANCE GRID ═══ */
+        .card-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 48px;
+            display: flex;
+            gap: 32px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        }
+
+        .card-content h2 {
+            font-family: var(--font-title);
+            font-size: 1.75rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .card-content p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .compliance-id {
+            position: absolute;
+            top: 24px;
+            right: 48px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #CBD5E1;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* ═══ PRIVACY ENGINE HIGHLIGHT ═══ */
+        .engine-card {
+            background: linear-gradient(to right, #ffffff, #F8FAFC);
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 32px rgba(66, 133, 244, 0.08);
+        }
+
+        /* ═══ FOOTER ═══ */
+        footer {
+            margin-top: 100px;
+            border-top: 1px solid var(--border);
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .commitment-text {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .footer-badges {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .f-badge::before {
+            content: '✓';
+            color: var(--success);
+            margin-right: 6px;
+        }
+
+        .legal-email {
+            display: inline-block;
+            background: #F1F5F9;
+            padding: 12px 24px;
+            border-radius: 100px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .legal-email:hover {
+            background: #E2E8F0;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.75rem;
+            }
+
+            .card {
+                flex-direction: column;
+                padding: 32px;
+                gap: 20px;
+            }
+
+            nav .logo-text {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="/" class="logo">
+            <div class="logo-dot"></div>
+            <span class="logo-text">Hello Copilot</span>
+        </a>
+        <a href="mailto:privacy@helloworldgpt.com" class="badge badge-primary" style="text-decoration: none;">Contact
+            Support</a>
+    </nav>
+
+    <div class="container">
+
+        <header class="hero">
+            <div class="badges">
+                <span class="badge badge-primary">Chrome Store Compliant</span>
+                <span class="badge badge-success">SOC 2 Ready</span>
+            </div>
+            <h1>Privacy & Compliance</h1>
+            <p class="subtitle"><span>Hello Copilot</span> is an AI bridge designed with an immutable privacy-first
+                architecture, fully synchronized with the latest Google policy blueprints.</p>
+        </header>
+
+        <div class="card-stack">
+
+            <!-- LIMITED USE -->
+            <div class="card">
+                <span class="compliance-id">Red Magnesium</span>
+                <div class="card-icon">🛡️</div>
+                <div class="card-content">
+                    <h2>1. Limited Use Policy</h2>
+                    <p>We strictly adhere to the Google 'Limited Use' requirements. Your data is processed only to
+                        provide core assistant functionality. Analysis is performed in-memory and is never utilized for
+                        unrelated advertising, data mining, or commercializing user metadata.</p>
+                </div>
+            </div>
+
+            <!-- PRIVACY ENGINE -->
+            <div class="card engine-card">
+                <span class="compliance-id">Purple Magnesium</span>
+                <div class="card-icon">🌀</div>
+                <div class="card-content">
+                    <h2>2. Privacy Engine (v5.0.2)</h2>
+                    <p>Our localized Privacy Engine automatically detects and scrubs Personally Identifiable Information
+                        (PII) including emails, phone numbers, and credit card patterns before page context reaches the
+                        cloud AI. Your private identity remains within your browser.</p>
+                </div>
+            </div>
+
+            <!-- ENCRYPTION -->
+            <div class="card">
+                <span class="compliance-id">Purple Copper</span>
+                <div class="card-icon">🔒</div>
+                <div class="card-content">
+                    <h2>3. Enterprise-Grade Encryption</h2>
+                    <p>All data in transit is protected via TLS 1.3 modern cryptography. Local interactions are stored
+                        exclusively in chrome.storage.local, ensuring that your episodic history is vaulted securely on
+                        your device, not our servers.</p>
+                </div>
+            </div>
+
+            <!-- SINGLE PURPOSE -->
+            <div class="card">
+                <span class="compliance-id">Red Nickel</span>
+                <div class="card-icon">💎</div>
+                <div class="card-content">
+                    <h2>4. Single Purpose Integrity</h2>
+                    <p>Hello Copilot complies with the Single Purpose rule. Every feature exists solely to enhance your
+                        contextual web interaction. We do not contain hidden toolbars, bundles, or deceptive install
+                        tactics.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p class="commitment-text">We built Hello Copilot with a mindset that your ideas are your assets. Deep
+                context should not mean deep exposure.</p>
+
+            <div class="footer-badges">
+                <span class="f-badge">End-to-End Encrypted</span>
+                <span class="f-badge">Zero Persistence</span>
+                <span class="f-badge">Model Isolation</span>
+            </div>
+
+            <p style="margin-bottom: 32px; color: var(--text-secondary);">Compliance Questions? Contact our legal team
+                at:</p>
+            <a href="mailto:privacy@helloworldgpt.com" class="legal-email">privacy@helloworldgpt.com</a>
+
+            <div style="margin-top: 60px; font-size: 12px; color: #CBD5E1; letter-spacing: 0.05em;">
+                &copy; 2026 HELLO COPILOT | HELLOWORLDGPT.COM | CHROME STORE AUDIT-READY
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+
+</html>

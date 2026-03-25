@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello Copilot - AI Sidebar & Browser Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="light-theme">
+  <div class="edge-container">
+    <header class="edge-header" id="main-header">
+      <div class="header-left">
+        <div class="header-logo-circle"></div>
+        <div class="header-btn-group">
+          <button class="btn-left" title="New Topic">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+          </button>
+          <div class="dropdown-wrapper">
+            <button class="btn-right dropdown-toggle" id="header-dropdown-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="dropdown-menu top-down" id="header-dropdown">
+              <div class="dropdown-item base-item">Create new conversation</div>
+              <div class="dropdown-item base-item">Create new page</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn" id="close-sidepanel" title="Close Side Panel">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="chat-container">
+      <div id="messages"></div>
+
+      <div id="live-overlay" class="live-overlay">
+        <div class="siri-orb"></div>
+        <div class="wave-container" id="wave-container">
+          <!-- Wave bars dynamically created -->
+          <div class="wave-bar" style="animation-delay: -0.1s; height: 12px;"></div>
+          <div class="wave-bar" style="animation-delay: -0.2s; height: 18px;"></div>
+          <div class="wave-bar" style="animation-delay: -0.3s; height: 14px;"></div>
+          <div class="wave-bar" style="animation-delay: -0.4s; height: 22px;"></div>
+          <div class="wave-bar" style="animation-delay: -0.1s; height: 15px;"></div>
+        </div>
+        <div class="voice-status-pill">Hello-Copilot Live Active</div>
+      </div>
+
+      <div id="dynamic-suggestions" class="suggestions-container" style="display: none;">
+        <h2 class="suggestions-title">How can I help you today?</h2>
+        <div class="suggestions-list" id="suggestions-list">
+          <!-- Dynamic suggestion buttons will be injected here -->
+        </div>
+      </div>
+    </main>
+
+    <div class="input-area">
+      <div class="edge-card">
+        <div id="mentions-dropdown" class="mentions-dropdown" style="display: none;"></div>
+        <textarea id="user-input" placeholder="Message Hello-Copilot" rows="1"></textarea>
+        <div class="edge-card-footer">
+          <div class="footer-left">
+            <button class="circle-btn">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+            <div class="dropdown-wrapper">
+              <button class="pill-btn dropdown-toggle" id="mode-dropdown-btn">
+                Auto
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="dropdown-menu bottom-up" id="mode-dropdown">
+                <div class="dropdown-item active" data-mode="Smart">
+                  <div class="dropdown-item-text">
+                    <span class="dropdown-title">Smart Mode</span>
+                    <span class="dropdown-desc">Gemini 3 Flash - Quick & Contextual</span>
+                  </div>
+                </div>
+                <div class="dropdown-item" data-mode="Agent">
+                  <div class="dropdown-item-text">
+                    <span class="dropdown-title">Agent Mode</span>
+                    <span class="dropdown-desc">Computer Use Preview - Direct Browser Action</span>
+                  </div>
+                </div>
+                    <span class="dropdown-title">Think deeper</span>
+                    <span class="dropdown-desc">Better for more complex topics</span>
+                  </div>
+                </div>
+                <div class="dropdown-item">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                  </svg>
+                  <div class="dropdown-item-text">
+                    <span class="dropdown-title">Study and learn</span>
+                    <span class="dropdown-desc">Quizzes, guided learning, and more</span>
+                  </div>
+                </div>
+                <div class="dropdown-item">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <div class="dropdown-item-text">
+                    <span class="dropdown-title">Search</span>
+                    <span class="dropdown-desc">Answers with enhanced references</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footer-right">
+            <button id="mic-btn" class="icon-btn" title="Voice typing">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
+            <button id="send-btn" class="icon-btn send-active" title="Send message">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../lib/purify.min.js"></script>
+  <script src="../lib/marked.min.js"></script>
+  <script src="app.js" type="module"></script>
+</body>
+
+</html>

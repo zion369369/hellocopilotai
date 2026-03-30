@@ -1,0 +1,112 @@
+{
+    "appName": {
+        "message": "Hello Copilot: #1 Browser Layer & AI Workflow Engine",
+        "description": "The name of the extension"
+    },
+    "appDesc": {
+        "message": "Your invisible AI layer for the entire web. Summarize YouTube, PDFs, books, Wikipedia, emails, news. Write on Gmail, X, WhatsApp, Instagram, LinkedIn, Facebook & Reddit. Search, translate & code. Not a sidebar. A browser-native intelligence layer.",
+        "description": "The description of the extension"
+    },
+    "enhanceTitle": {
+        "message": "Activate Browser Layer",
+        "description": "Tooltip for the FAB"
+    },
+    "previewTitle": {
+        "message": "Browser Layer Intelligence",
+        "description": "Title of the preview overlay"
+    },
+    "acceptBtn": {
+        "message": "Accept",
+        "description": "Label for the accept button"
+    },
+    "editBtn": {
+        "message": "Edit",
+        "description": "Label for the edit button"
+    },
+    "rejectBtn": {
+        "message": "Reject",
+        "description": "Label for the reject button"
+    },
+    "shareBtn": {
+        "message": "Share",
+        "description": "Label for the share button"
+    },
+    "promptCoPilot": {
+        "message": "Browser Layer Active"
+    },
+    "promptScore": {
+        "message": "Context Score"
+    },
+    "aiThinking": {
+        "message": "Analyzing DOM context..."
+    },
+    "minimize": {
+        "message": "Minimize"
+    },
+    "maximize": {
+        "message": "Maximize"
+    },
+    "close": {
+        "message": "Close"
+    },
+    "tipBrief": {
+        "message": "Your prompt is brief. Add more detail about what specifically you need."
+    },
+    "tipFormat": {
+        "message": "Specify your desired output format (list, table, step-by-step, etc.)."
+    },
+    "tipAudience": {
+        "message": "Define your target audience or expertise level for a tailored response."
+    },
+    "tipConstraints": {
+        "message": "Add constraints (e.g., word count, budget, timeframe) to focus the response."
+    },
+    "tipContext": {
+        "message": "Add context about your situation for more relevant suggestions."
+    },
+    "tipExamples": {
+        "message": "Include examples of what you're looking for to guide the AI response."
+    },
+    "tipRole": {
+        "message": "Assign an expert role (e.g., 'Act as a nutritionist...') for deeper answers."
+    },
+    "tipDefault": {
+        "message": "Be specific about what you need — vague prompts get vague answers."
+    },
+    "toastPerfected": {
+        "message": "✨ Prompt Perfected!"
+    },
+    "toastRate": {
+        "message": "Love the Browser Layer? Rate us 5-stars!"
+    },
+    "rateBtn": {
+        "message": "RATE ★★★★★"
+    },
+    "rateSuccess": {
+        "message": "Thank you for powering the Browser Layer!"
+    },
+    "browserLayerActive": {
+        "message": "Browser Layer Active",
+        "description": "Status badge text in sidebar header"
+    },
+    "browserLayerTagline": {
+        "message": "Not a wrapper. A browser-native intelligence layer.",
+        "description": "The core positioning tagline"
+    },
+    "featureContextual": {
+        "message": "DOM-Aware Intelligence",
+        "description": "Feature: contextual understanding"
+    },
+    "featureOverlay": {
+        "message": "Zero-Friction Overlays",
+        "description": "Feature: in-situ AI"
+    },
+    "featureCrossTab": {
+        "message": "Cross-Tab Memory",
+        "description": "Feature: session-wide context"
+    },
+    "featureModelAgnostic": {
+        "message": "Model-Agnostic Architecture",
+        "description": "Feature: multi-model switching"
+    }
+}

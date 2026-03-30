@@ -1,0 +1,239 @@
+/* Hello World GPT - Content Script Styles */
+
+#hwgpt-pro-root {
+    position: fixed;
+    z-index: 2147483647;
+    pointer-events: none;
+}
+
+.hwgpt-container {
+    position: absolute;
+    pointer-events: auto;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    transition: opacity 0.3s, transform 0.3s;
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+.hwgpt-container.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.hwgpt-fab {
+    width: 36px;
+    height: 36px;
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
+    color: #1a73e8;
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative;
+}
+
+.hwgpt-fab:hover {
+    box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    background-color: #f8f9fa;
+    transform: scale(1.05);
+}
+
+.hwgpt-fab.loading svg {
+    animation: hwgpt-spin 1s linear infinite;
+}
+
+@keyframes hwgpt-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hwgpt-streak-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ea4335;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 10px;
+    border: 2px solid white;
+    display: none;
+}
+
+.hwgpt-streak-badge.visible {
+    display: block;
+}
+
+.hwgpt-modal {
+    position: absolute;
+    bottom: 44px;
+    right: 0;
+    width: 320px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border: 1px solid #dadce0;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    animation: hwgpt-slideUp 0.3s ease-out;
+}
+
+@keyframes hwgpt-slideUp {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.hwgpt-modal.visible {
+    display: flex;
+}
+
+.hwgpt-header {
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dadce0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hwgpt-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #202124;
+}
+
+.hwgpt-content {
+    padding: 16px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.text-original {
+    color: #5f6368;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #dadce0;
+}
+
+.text-addition {
+    color: #1a73e8;
+    font-weight: 500;
+    background: rgba(26, 115, 232, 0.05);
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.hwgpt-footer {
+    padding: 12px 16px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    border-top: 1px solid #dadce0;
+}
+
+.btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s;
+}
+
+.btn-primary {
+    background: #1a73e8;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1557b0;
+}
+
+.btn-secondary {
+    background: #f1f3f4;
+    color: #3c4043;
+}
+
+.btn-secondary:hover {
+    background: #e8eaed;
+}
+
+/* Toast Actions & Gating UI */
+.hwgpt-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #1e293b;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 2147483647;
+    max-width: 280px;
+    pointer-events: auto !important;
+}
+
+.hwgpt-toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hwgpt-toast-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.hwgpt-toast-btn {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.hwgpt-toast-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.hwgpt-toast-btn.primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.hwgpt-toast-btn.primary:hover {
+    background: #2563eb;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}

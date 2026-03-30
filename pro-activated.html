@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World GPT - Access Verified</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Google Sans', sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: #202124;
+        }
+
+        .container {
+            background: white;
+            border-radius: 28px;
+            padding: 48px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3), 0 4px 18px 3px rgba(60, 64, 67, 0.15);
+            text-align: center;
+            animation: slideUp 0.6s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .icon-circle {
+            width: 72px;
+            height: 72px;
+            background: #e8f0fe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .icon-circle svg {
+            color: #1a73e8;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 400;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        p {
+            font-size: 16px;
+            color: #5f6368;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        .status-box {
+            padding: 16px;
+            border-radius: 12px;
+            background: #f1f3f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            transition: all 0.3s;
+        }
+
+        .status-box.success {
+            background: #e6f4ea;
+            color: #1e8e3e;
+        }
+
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #dadce0;
+            border-top: 3px solid #1a73e8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            text-align: left;
+            margin: 24px 0;
+            border-top: 1px solid #dadce0;
+            padding-top: 24px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #3c4043;
+        }
+
+        .feature-item svg {
+            color: #1e8e3e;
+        }
+
+        .btn-done {
+            width: 100%;
+            height: 48px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 12px;
+        }
+
+        .btn-done:hover {
+            background: #1765cc;
+            box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="icon-circle">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+        </div>
+        <h1>Access Verified</h1>
+        <p>Your Hello World GPT account is now synchronized across all platforms.</p>
+
+        <div id="status" class="status-box">
+            <div class="loader"></div>
+            <span>Finalizing activation...</span>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                </svg>
+                <span>Full Neural Architecture Unlocked</span>
+            </div>
+            <div class="feature-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                </svg>
+                <span>Advanced Reasoning Models Active</span>
+            </div>
+            <div class="feature-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                </svg>
+                <span>Cross-Device Subscription Sync</span>
+            </div>
+        </div>
+
+        <button class="btn-done" id="doneBtn" style="display: none;">Continue to Dashboard</button>
+    </div>
+
+    <script src="lib/supabase.min.js"></script>
+    <script>
+        const SUPABASE_URL = 'https://asdkryvlvldcgolthnsq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzZGtyeXZsdmxkY2dvbHRobnNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMTIxMTksImV4cCI6MjA3NzU4ODExOX0.z6WsmU1FU-MY-3MSERzw62zJKPqjvrP9USCBICSZa3s';
+
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function init() {
+            const statusBox = document.getElementById('status');
+            const doneBtn = document.getElementById('doneBtn');
+
+            try {
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+
+                if (error || !session) {
+                    statusBox.innerHTML = '<span>Authentication required</span>';
+                    statusBox.style.background = '#fde8e8';
+                    statusBox.style.color = '#c81e1e';
+                    return;
+                }
+
+                // Ensure profile exists in public.profiles for Stripe FDW Join
+                await supabaseClient.from('profiles').upsert({
+                    id: session.user.id,
+                    email: session.user.email,
+                    updated_at: new Date().toISOString()
+                });
+
+                // Communicate with extension background script
+                const EXTENSION_ID = 'okccbohmicikjbgkgoaebcfhlpgodnni';
+                chrome.runtime.sendMessage(EXTENSION_ID, {
+                    action: 'external-auth-sync', // Use the new action handler we added
+                    session: session
+                }, (response) => {
+                    statusBox.classList.add('success');
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('flow') === 'checkout') {
+                        statusBox.innerHTML = '<span>✅ Account Verified. Redirecting...</span>';
+                        const checkoutUrl = new URL('https://buy.stripe.com/test_7sY8wPaLZ8Ln8iG2n68Ra00');
+                        checkoutUrl.searchParams.append('client_reference_id', session.user.id);
+                        checkoutUrl.searchParams.append('prefilled_email', session.user.email);
+                        setTimeout(() => { window.location.href = checkoutUrl.toString(); }, 1500);
+                    } else {
+                        statusBox.innerHTML = '<span>✅ Successfully Activated</span>';
+                        doneBtn.style.display = 'block';
+                        doneBtn.onclick = () => window.close();
+                        setTimeout(() => window.close(), 3000);
+                    }
+                });
+
+            } catch (err) {
+                console.error(err);
+                statusBox.innerHTML = '<span>Activation error</span>';
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

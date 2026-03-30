@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World GPT</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap');
+
+        :root {
+            --google-blue: #1A73E8;
+            --google-blue-hover: #1765CC;
+            --google-bg: #FFFFFF;
+            --google-surface: #F8F9FA;
+            --google-border: #E0E0E0;
+            --google-text: #202124;
+            --google-text-secondary: #5F6368;
+            --google-radius-xl: 20px;
+            --google-radius-lg: 12px;
+            --google-radius-md: 8px;
+            --google-spring: cubic-bezier(0.2, 0, 0, 1);
+            --google-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --google-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --gemini-gradient: linear-gradient(90deg, #4285F4 0%, #EA4335 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            width: 360px;
+            min-height: 600px;
+            font-family: 'Inter', 'Google Sans', -apple-system, sans-serif;
+            background: var(--google-bg);
+            color: var(--google-text);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.01em;
+        }
+
+        .app-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.4s var(--google-spring);
+            background: radial-gradient(circle at top right, rgba(66, 133, 244, 0.05), transparent),
+                radial-gradient(circle at bottom left, rgba(52, 168, 83, 0.05), transparent);
+        }
+
+        .app-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .brand-text h1 {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--google-text);
+            letter-spacing: -0.01em;
+        }
+
+        .header-badges {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .subscription-badge {
+            font-size: 10px;
+            font-weight: 500;
+            padding: 2px 10px;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .tier-free {
+            background: var(--google-surface);
+            color: var(--google-text-secondary);
+            border: 1px solid var(--google-border);
+        }
+
+        .tier-plus {
+            background: #E8F0FE;
+            color: var(--google-blue);
+        }
+
+        .tier-pro {
+            background: var(--gemini-gradient);
+            color: white;
+        }
+
+        .rank-badge {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--google-text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Usage Card */
+        .usage-card {
+            background: var(--google-surface);
+            border-radius: var(--google-radius-xl);
+            padding: 13px;
+            border: 1px solid var(--google-border);
+            transition: all 0.2s ease;
+        }
+
+        .usage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 12px;
+        }
+
+        .usage-title label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--google-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .usage-title span {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--google-text);
+        }
+
+        .usage-limit {
+            font-size: 12px;
+            color: var(--google-text-secondary);
+        }
+
+        .progress-container {
+            height: 4px;
+            background: #E8EAED;
+            border-radius: 100px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--google-blue);
+            border-radius: 100px;
+            transition: width 1s var(--google-spring);
+        }
+
+        /* Streak Journey */
+        .streak-section {
+            margin-top: 4px;
+        }
+
+        .streak-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .streak-header span {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--google-text);
+        }
+
+        .streak-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #E37400;
+        }
+
+        .streak-journey {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding: 4px 0;
+        }
+
+        .streak-line {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            right: 12px;
+            height: 2px;
+            background: #E8EAED;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .streak-line-fill {
+            height: 100%;
+            background: #FBBC04;
+            width: 0%;
+            transition: width 0.8s var(--google-spring);
+        }
+
+        .streak-day {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--google-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: 500;
+            color: var(--google-text-secondary);
+            position: relative;
+            z-index: 1;
+            border: 2px solid var(--google-bg);
+        }
+
+        .streak-day.completed {
+            background: #FBBC04;
+            color: white;
+            border-color: #FBBC04;
+        }
+
+        .streak-day.active {
+            background: white;
+            color: #FBBC04;
+            border-color: #FBBC04;
+            transform: scale(1.1);
+        }
+
+        .streak-day-label {
+            position: absolute;
+            bottom: -16px;
+            font-size: 7px;
+            color: var(--google-text-secondary);
+            white-space: nowrap;
+        }
+
+        /* Netflix Cinematic Onboarding */
+        .onboarding-container {
+            display: none;
+            background: #000000;
+            border-radius: var(--google-radius-xl);
+            padding: 24px;
+            border: 1px solid #222;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+            min-height: 190px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .onboarding-container.visible {
+            display: block;
+            animation: cinematicReveal 0.8s cubic-bezier(0.5, 0, 0.1, 1);
+        }
+
+        @keyframes cinematicReveal {
+            from {
+                opacity: 0;
+                transform: scale(0.98) translateY(10px);
+                filter: blur(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .mock-browser {
+            background: #141414;
+            border-radius: 16px;
+            border: 1px solid #333;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .mock-header {
+            height: 28px;
+            background: #1f1f1f;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            gap: 8px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .mock-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #333;
+        }
+
+        .mock-content {
+            padding: 20px;
+            flex: 1;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #e5e5e5;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        .typing-prompt {
+            white-space: pre-wrap;
+            color: #888;
+            border-right: 2px solid #E50914;
+            /* Netflix Red Cursor */
+            animation: blink 0.7s infinite;
+            display: inline;
+        }
+
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        .neural-pulse {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(66, 133, 244, 0.2), transparent);
+            transform: skewX(-25deg);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .neural-pulse.active {
+            animation: pulseSweep 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes pulseSweep {
+            to {
+                left: 200%;
+            }
+        }
+
+        .sparkle-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 32px;
+            z-index: 10;
+            pointer-events: none;
+            filter: drop-shadow(0 0 15px rgba(66, 133, 244, 0.8));
+        }
+
+        .sparkle-effect.active {
+            animation: neuralBurst 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes neuralBurst {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+                filter: brightness(2) blur(5px);
+            }
+
+            30% {
+                transform: translate(-50%, -50%) scale(1.8);
+                opacity: 1;
+                filter: brightness(1.5) blur(0);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.4);
+                opacity: 0;
+                filter: brightness(1) blur(2px);
+            }
+        }
+
+        .enhanced-result {
+            display: none;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .enhanced-result.visible {
+            display: block;
+            animation: resolveText 0.6s cubic-bezier(0.2, 0, 0, 1) forwards;
+        }
+
+        @keyframes resolveText {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+                filter: brightness(2);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: brightness(1);
+            }
+        }
+
+        .highlight {
+            background: linear-gradient(90deg, rgba(66, 133, 244, 0.2), transparent);
+            color: #4285F4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-left: 2px solid #4285F4;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .upgrade-status {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            font-size: 11px;
+            color: #00E676;
+            font-weight: 700;
+            opacity: 0;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .upgrade-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #00E676;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00E676;
+        }
+
+        .upgrade-status.visible {
+            animation: statusReveal 0.5s var(--google-spring) forwards;
+        }
+
+        @keyframes statusReveal {
+            from {
+                opacity: 0;
+                transform: translateX(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Actions & Buttons */
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .btn-main {
+            width: 100%;
+            height: 52px;
+            border-radius: 26px;
+            background: #E50914;
+            /* Netflix Red */
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-main .loader-container {
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .btn-main.loading .loader-container {
+            display: flex;
+        }
+
+        .btn-main.loading span,
+        .btn-main.loading svg {
+            visibility: hidden;
+        }
+
+        .spinner-mini {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-main:hover {
+            background: #f40612;
+            box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-main.cta-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: none;
+        }
+
+        .btn-main.cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .action-card {
+            background: white;
+            border: 1px solid var(--google-border);
+            border-radius: 16px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card:hover {
+            background: var(--google-surface);
+            border-color: #c3c6cc;
+            transform: translateY(-2px);
+        }
+
+        .action-card.locked {
+            cursor: default;
+            opacity: 0.7;
+            background: var(--google-surface);
+        }
+
+        .action-card.locked:hover {
+            transform: none;
+            border-color: var(--google-border);
+        }
+
+        .action-card .icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--google-surface);
+        }
+
+        .action-card h3 {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--google-text);
+        }
+
+        .action-card p {
+            font-size: 11px;
+            color: var(--google-text-secondary);
+        }
+
+        .action-card.pro {
+            grid-column: span 2;
+            flex-direction: row;
+            align-items: center;
+            padding: 14px 16px;
+            background: linear-gradient(to right, #fff, #f8faff);
+        }
+
+        .action-card.pro .icon-box {
+            background: #E8F0FE;
+            color: var(--google-blue);
+        }
+
+        .action-card.pro .text-content {
+            flex: 1;
+        }
+
+        .action-card.pro .pro-badge {
+            background: var(--gemini-gradient);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(32, 33, 36, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 24px;
+            animation: fadeInOverlay 0.2s ease;
+        }
+
+        .modal-overlay.visible {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 28px;
+            padding: 40px 32px;
+            width: 100%;
+            max-width: 320px;
+            position: relative;
+            animation: modalPop 0.3s var(--google-spring);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes modalPop {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 8px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--google-text-secondary);
+        }
+
+        .modal-close:hover {
+            background: var(--google-surface);
+        }
+
+        .modal-logo {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 20px;
+            object-fit: contain;
+        }
+
+        .modal h2 {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 12px;
+            color: var(--google-text);
+            letter-spacing: -0.01em;
+        }
+
+        .modal p {
+            font-size: 14px;
+            color: var(--google-text-secondary);
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
+        .promo-input-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            background: #F1F3F4;
+            border-radius: 28px;
+            padding: 4px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .promo-input-container:focus-within {
+            background: white;
+            border-color: var(--google-blue);
+            box-shadow: var(--google-shadow-sm);
+        }
+
+        .promo-input {
+            flex: 1;
+            height: 40px;
+            border: none;
+            background: transparent;
+            padding: 0 16px;
+            font-family: inherit;
+            font-size: 15px;
+            outline: none;
+            color: var(--google-text);
+            min-width: 0;
+        }
+
+        .btn-apply {
+            height: 40px;
+            padding: 0 24px;
+            border-radius: 20px;
+            background: var(--google-blue);
+            color: white;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-apply:hover {
+            background: var(--google-blue-hover);
+        }
+
+        .share-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .share-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            height: 48px;
+            padding: 0 16px;
+            border-radius: 24px;
+            border: 1px solid var(--google-border);
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--google-text);
+        }
+
+        .share-item:hover {
+            background: var(--google-surface);
+            border-color: var(--google-blue);
+        }
+
+        .share-item svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .share-item.full-width {
+            grid-column: span 2;
+        }
+
+        .feature-list {
+            width: 100%;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--google-text);
+        }
+
+        .feature-item svg {
+            color: var(--google-blue);
+            flex-shrink: 0;
+        }
+
+        .eco-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #1E8E3E;
+            margin-top: 16px;
+            font-weight: 500;
+        }
+
+        .main-footer-note {
+            text-align: center;
+            font-size: 10px;
+            color: var(--google-text-secondary);
+            margin-top: 12px;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="brand">
+                <img src="icons/Hello Icon.png" class="logo" alt="Logo">
+                <div class="brand-text">
+                    <h1>Hello World GPT</h1>
+                    <p style="font-size: 11px; color: var(--google-text-secondary); font-weight: 400;">Powerful AI Assistant</p>
+                </div>
+            </div>
+            <div class="header-badges">
+                <div id="subscription-badge" class="subscription-badge tier-free">Free</div>
+                <div id="user-rank" class="rank-badge">
+                    <span id="rank-icon">✨</span>
+                    <span id="rank-name">Novice</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Onboarding Animation Section -->
+        <div id="onboarding-card" class="onboarding-container">
+            <div class="mock-browser">
+                <div class="mock-header">
+                    <div class="mock-dot"></div>
+                    <div class="mock-dot"></div>
+                    <div class="mock-dot"></div>
+                </div>
+                <div class="mock-content">
+                    <div id="anim-pulse" class="neural-pulse"></div>
+                    <div id="anim-typing" class="typing-prompt"></div>
+                    <div id="anim-sparkle" class="sparkle-effect">✨</div>
+                    <div id="anim-enhanced" class="enhanced-result">
+                        <div class="highlight">Subject: Request for Meeting</div>
+                        Dear Professor, I would like to discuss the upcoming assignment...
+                    </div>
+                    <div id="anim-status" class="upgrade-status">Upgraded in 0.3s</div>
+                </div>
+            </div>
+        </div>
+
+        <main class="usage-card" id="usage-card">
+            <div class="usage-header">
+                <div class="usage-title">
+                    <label>Daily usage</label>
+                    <span id="usage-count">0 / 5</span>
+                </div>
+                <div class="usage-limit" id="usage-reset">Resets in 20h</div>
+            </div>
+
+            <div class="progress-container">
+                <div id="usage-bar" class="progress-fill" style="width: 0%"></div>
+            </div>
+
+            <div class="streak-section">
+                <div class="streak-header">
+                    <span>Weekly streak</span>
+                    <div class="streak-badge">
+                        <span>🔥</span>
+                        <span id="stat-streak">0 days</span>
+                    </div>
+                </div>
+                <div class="streak-journey" id="streak-journey">
+                    <div class="streak-line">
+                        <div class="streak-line-fill" id="streak-line-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="actions">
+            <button id="magic-enhance" class="btn-main">
+                <div class="loader-container">
+                    <div class="spinner-mini"></div>
+                </div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path
+                        d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+                </svg>
+                <span>See how it works</span>
+            </button>
+
+            <button id="try-example" class="btn-main cta-secondary" style="display: none;">
+                <span>Try with example</span>
+            </button>
+
+            <div class="action-grid">
+                <div class="action-card" id="student-plus-btn">
+                    <div class="icon-box">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5zM6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Student Plus</h3>
+                        <p>20 prompts/day — Free for learners!</p>
+                    </div>
+                </div>
+
+                <div class="action-card" id="share-plus-btn">
+                    <div class="icon-box">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71L12 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 id="boost-title">Daily Boost</h3>
+                        <p id="boost-desc">+5 prompts — Just for sharing!</p>
+                    </div>
+                </div>
+
+                <div class="action-card pro" id="upgrade-btn">
+                    <div class="icon-box">
+                        <img src="icons/Hello Icon.png" width="20" height="20" alt="Logo">
+                    </div>
+                    <div class="text-content">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3>Upgrade to Pro</h3>
+                            <span
+                                style="display: inline-flex; align-items: center; gap: 4px; font-size: 10px; color: #137333; background: #E6F4EA; padding: 2px 8px; border-radius: 10px; font-weight: 500; white-space: nowrap;">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,11 17,8 17,8Z" />
+                                </svg>
+                                Carbon neutral
+                            </span>
+                        </div>
+                        <p>Unlimited power for AI experts</p>
+                    </div>
+                    <div class="pro-badge">Pro</div>
+                </div>
+            </div>
+        </footer>
+        <div class="main-footer-note"
+            style="border-top: 1px solid var(--google-border); padding-top: 12px; margin-top: 16px; justify-content: center; width: 100%;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#1E8E3E" style="opacity: 0.8;">
+                <path
+                    d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,11 17,8 17,8Z" />
+            </svg>
+            <span>1% of revenue is dedicated to carbon removal</span>
+        </div>
+        <div style="text-align: center; margin-top: 12px; padding-bottom: 8px;">
+            <a href="https://www.helloworldgpt.com/helloprompt/privacy" target="_blank"
+                style="font-size: 10px; color: var(--google-text-secondary); text-decoration: none; opacity: 0.7;">Privacy
+                Policy</a>
+        </div>
+    </div>
+
+    <!-- Pro Modal -->
+    <div id="pro-modal" class="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" id="close-modal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+            </button>
+            <img src="icons/Hello Icon.png" class="modal-logo" alt="Logo">
+            <h2>Experience Pro</h2>
+            <p>Unlock the full potential of your AI with unlimited enhancements.</p>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                    <span>Unlimited daily enhancements</span>
+                </div>
+                <div class="feature-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                    <span>Priority neural compute access</span>
+                </div>
+                <div class="feature-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                    <span>Advanced multi-turn reasoning</span>
+                </div>
+            </div>
+
+            <button id="checkout-btn" class="btn-main">Subscribe for $9/mo</button>
+
+            <!-- Supabase Auth Section -->
+            <div id="auth-section"
+                style="margin-top: 16px; padding: 16px; background: #f8f9fa; border-radius: 12px; border: 1px solid var(--google-border);">
+                <!-- Not logged in state -->
+                <div id="auth-login-form">
+                    <p style="font-size: 13px; color: #202124; margin-bottom: 12px; font-weight: 600;">🔐 Sign in to
+                        link your subscription</p>
+                    <input type="email" id="auth-email" placeholder="Email"
+                        style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #dadce0; background: white; color: #202124; font-size: 13px; margin-bottom: 8px;">
+                    <input type="password" id="auth-password" placeholder="Password"
+                        style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #dadce0; background: white; color: #202124; font-size: 13px; margin-bottom: 12px;">
+                    <div style="display: flex; gap: 8px;">
+                        <button id="auth-signin-btn"
+                            style="flex: 1; padding: 10px 16px; border-radius: 8px; background: #1a73e8; color: white; border: none; cursor: pointer; font-size: 13px; font-weight: 600;">Sign
+                            In</button>
+                        <button id="auth-signup-btn"
+                            style="flex: 1; padding: 10px 16px; border-radius: 8px; background: white; color: #1a73e8; border: 1px solid #1a73e8; cursor: pointer; font-size: 13px; font-weight: 600;">Sign
+                            Up</button>
+                    </div>
+                    <p id="auth-status" style="font-size: 11px; margin-top: 8px; text-align: center; display: none;">
+                    </p>
+                </div>
+
+                <!-- Logged in state -->
+                <div id="auth-logged-in" style="display: none;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #4285F4, #34A853); display: flex; align-items: center; justify-content: center;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                                <path
+                                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                            </svg>
+                        </div>
+                        <div style="flex: 1;">
+                            <p id="auth-user-email" style="font-size: 13px; font-weight: 600; color: #202124;"></p>
+                            <p id="auth-user-status" style="font-size: 11px; color: #5f6368;"></p>
+                        </div>
+                        <button id="auth-signout-btn"
+                            style="padding: 6px 12px; border-radius: 6px; background: #f1f3f4; color: #5f6368; border: none; cursor: pointer; font-size: 11px;">Sign
+                            Out</button>
+                    </div>
+                    <p style="font-size: 11px; color: #34A853; text-align: center;">✓ Subscription will be linked to
+                        your account</p>
+                </div>
+            </div>
+
+            <div
+                style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 12px; opacity: 0.8;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    style="color: #635bff;">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span style="font-size: 11px; font-weight: 500; color: var(--google-text-secondary);">Verified payment
+                    by <span style="color: #635bff; font-weight: 700;">Stripe</span></span>
+            </div>
+            <div class="eco-badge"
+                style="background: #F8F9FA; border: 1px solid var(--google-border); border-radius: 12px; padding: 12px; margin-top: 24px; display: flex; align-items: flex-start; text-align: left; gap: 12px;">
+                <div
+                    style="background: #E6F4EA; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#137333">
+                        <path
+                            d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,11 17,8 17,8Z" />
+                    </svg>
+                </div>
+                <div style="font-size: 12px; line-height: 1.4; color: var(--google-text-secondary);">
+                    <b style="color: #137333; display: block; margin-bottom: 2px;">Intelligence with Impact</b>
+                    1% of your subscription goes directly to high-impact carbon removal initiatives.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Modal -->
+    <div id="student-modal" class="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" id="close-student-modal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+            </button>
+            <img src="icons/Hello Icon.png" class="modal-logo" alt="Logo">
+            <h2>Student Plus</h2>
+            <p>Enter your student promo code to unlock 20 daily prompts for free.</p>
+            <div class="promo-input-container">
+                <input type="text" id="promo-code-input" class="promo-input" placeholder="Enter code...">
+                <button id="apply-promo-btn" class="btn-apply">Apply</button>
+            </div>
+            <p style="margin-bottom: 0; font-size: 12px; color: var(--google-text-secondary);">Don't have a code? Ask
+                your university or bootcamp</p>
+        </div>
+    </div>
+
+    <!-- Plus Modal -->
+    <div id="plus-modal" class="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" id="close-plus-modal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+            </button>
+            <img src="icons/Hello Icon.png" class="modal-logo" alt="Logo">
+            <h2>Share & Boost</h2>
+            <p id="plus-modal-desc">Share with your network to get 5 extra prompts for today.</p>
+            <div class="share-grid" id="share-grid">
+                <div class="share-item" id="share-twitter">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                    <span>Twitter / X</span>
+                </div>
+                <div class="share-item" id="share-facebook">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    </svg>
+                    <span>Facebook</span>
+                </div>
+                <div class="share-item" id="share-instagram">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.332 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.332-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308 1.266-.058 1.646-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-1.35.061-2.272.276-3.079.591-.834.324-1.541.758-2.245 1.462-.704.704-1.138 1.411-1.462 2.245-.315.807-.53 1.729-.591 3.079-.058 1.28-.072 1.688-.072 4.947s.014 3.667.072 4.947c.061 1.35.276 2.272.591 3.079.324.834.758 1.541 1.462 2.245.704.704 1.411 1.138 2.245 1.462.807.315 1.729.53 3.079.591 1.28.058 1.688.072 4.947.072s3.667-.014 4.947-.072c1.35-.061 2.272-.276 3.079-.591.834-.324 1.541-.758 2.245-1.462.704-.704 1.411-1.462 1.462-2.245.315-.807.53-1.729.591-3.079.058-1.28.072-1.688.072-4.947s-.014-3.667-.072-4.947c-.061-1.35-.276-2.272-.591-3.079-.324-.834-.758-1.541-1.462-2.245-.704-.704-1.411-1.138-2.245-1.462-.807-.315-1.729-.53-3.079-.591-1.28-.058-1.688-.072-4.947-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                    <span>Instagram</span>
+                </div>
+                <div class="share-item" id="share-linkedin">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                    <span>LinkedIn</span>
+                </div>
+                <div class="share-item full-width" id="share-native">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                    </svg>
+                    <span>Copy share link</span>
+                </div>
+            </div>
+            <p id="boost-reset-timer"
+                style="margin-top: 20px; font-size: 12px; color: var(--google-text-secondary); display: none;">
+                Boost active. Resets in <span id="boost-time-left">20h</span>
+            </p>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

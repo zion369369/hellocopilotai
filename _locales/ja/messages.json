@@ -1,0 +1,80 @@
+{
+    "appName": {
+        "message": "Hello World GPT - インビジブル・インテリジェンス"
+    },
+    "appDesc": {
+        "message": "AIプロンプトに構造的なインテリジェンスを付加します。意図を保持しながら明快さを向上。Google基準のプライバシーとパフォーマンスを提供します。"
+    },
+    "enhanceTitle": {
+        "message": "インテリジェンスで強化"
+    },
+    "previewTitle": {
+        "message": "インテリジェンス・プレビュー"
+    },
+    "acceptBtn": {
+        "message": "適用"
+    },
+    "editBtn": {
+        "message": "編集"
+    },
+    "rejectBtn": {
+        "message": "拒否"
+    },
+    "shareBtn": {
+        "message": "共有"
+    },
+    "promptCoPilot": {
+        "message": "プロンプト・コパイロット"
+    },
+    "promptScore": {
+        "message": "プロンプト・スコア"
+    },
+    "aiThinking": {
+        "message": "AIが考えています..."
+    },
+    "minimize": {
+        "message": "最小化"
+    },
+    "maximize": {
+        "message": "最大化"
+    },
+    "close": {
+        "message": "閉じる"
+    },
+    "tipBrief": {
+        "message": "プロンプトが短すぎます。具体的に何が必要か、詳細を追加してください。"
+    },
+    "tipFormat": {
+        "message": "希望する出力形式（リスト、表、ステップバイステップなど）を指定してください。"
+    },
+    "tipAudience": {
+        "message": "より適切な回答を得るために、ターゲットオーディエンスや専門知識レベルを定義してください。"
+    },
+    "tipConstraints": {
+        "message": "回答を絞り込むために、制約（単語数、予算、期間など）を追加してください。"
+    },
+    "tipContext": {
+        "message": "より関連性の高い提案を得るために、状況に関するコンテキストを追加してください。"
+    },
+    "tipExamples": {
+        "message": "AIの回答を導くために、探しているものの例を含めてください。"
+    },
+    "tipRole": {
+        "message": "より深い回答を得るために、専門的な役割（例：「栄養士として行動してください...」）を割り当ててください。"
+    },
+    "tipDefault": {
+        "message": "必要なことを具体的に伝えてください — 曖昧なプロンプトには曖昧な答えが返ってきます。"
+    },
+    "toastPerfected": {
+        "message": "✨ プロンプトが完成しました！"
+    },
+    "toastRate": {
+        "message": "結果が気に入りましたか？ 5つ星で評価してください！"
+    },
+    "rateBtn": {
+        "message": "今すぐ評価"
+    },
+    "rateSuccess": {
+        "message": "ご支援ありがとうございます！"
+    }
+}

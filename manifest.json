@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Hello Copilot - AI Sidebar & Browser Assistant",
-  "version": "1.0.0",
-  "description": "The ultimate browser-native AI assistant designed for high-level collaboration and exploration.",
+  "name": "Hello Copilot: #1 Browser Layer & AI Workflow Engine",
+  "version": "1.1.0",
+  "description": "Your invisible AI layer for the entire web. Summarize YouTube, PDFs, books, Wikipedia, emails, news. Write on Gmail, X, WhatsApp, Instagram, LinkedIn, Facebook & Reddit. Search, translate & code. Not a sidebar. A browser-native intelligence layer.",
   "permissions": [
     "sidePanel",
     "storage",
@@ -30,7 +30,7 @@
     "type": "module"
   },
   "action": {
-    "default_title": "Open Hello Copilot",
+    "default_title": "Activate Browser Layer",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",
@@ -54,10 +54,21 @@
       "all_frames": true
     }
   ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+M",
+        "mac": "Command+M"
+      },
+      "description": "Wake up Hello Copilot"
+    }
+  },
   "web_accessible_resources": [
     {
       "resources": [
-        "icons/*"
+        "icons/*",
+        "workers/analysis-worker.js",
+        "scripts/aso/performance_audit.js"
       ],
       "matches": [
         "<all_urls>"

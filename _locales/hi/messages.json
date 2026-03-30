@@ -1,0 +1,104 @@
+{
+    "appName": {
+        "message": "Hello World GPT: AI प्रॉम्प्ट ऑप्टिमाइज़र",
+        "description": "The name of the extension"
+    },
+    "appDesc": {
+        "message": "अपने AI प्रॉम्प्ट को संरचनात्मक इंटेलिजेंस के साथ बेहतर बनाएं। स्पष्टता बढ़ाएं, इरादे को सुरक्षित रखें, और बेहतर AI प्रतिक्रियाएं प्राप्त करें।",
+        "description": "The description of the extension"
+    },
+    "enhanceTitle": {
+        "message": "इंटेलिजेंस के साथ बढ़ाएं",
+        "description": "Tooltip for the FAB"
+    },
+    "previewTitle": {
+        "message": "इंटेलिजेंस प्रिव्यू",
+        "description": "Title of the preview modal"
+    },
+    "acceptBtn": {
+        "message": "स्वीकार करें",
+        "description": "Label for the accept button"
+    },
+    "editBtn": {
+        "message": "सुधारें",
+        "description": "Label for the edit button"
+    },
+    "rejectBtn": {
+        "message": "अस्वीकार करें",
+        "description": "Label for the reject button"
+    },
+    "shareBtn": {
+        "message": "साझा करें",
+        "description": "Label for the share button"
+    },
+    "scoringEngine": {
+        "message": "स्कोरिंग इंजन",
+        "description": "Label for scoring engine"
+    },
+    "localHeuristics": {
+        "message": "स्थानीय हयूरिस्टिक्स",
+        "description": "Label for local heuristics"
+    },
+    "privacyGuard": {
+        "message": "प्राइवेसी गार्ड",
+        "description": "Label for privacy guard"
+    },
+    "intentDetection": {
+        "message": "इरादे की पहचान",
+        "description": "Label for intent detection"
+    },
+    "promptCoPilot": {
+        "message": "प्रॉम्प्ट को-पायलट"
+    },
+    "promptScore": {
+        "message": "प्रॉम्प्ट स्कोर"
+    },
+    "aiThinking": {
+        "message": "AI सोच रहा है..."
+    },
+    "minimize": {
+        "message": "छोटा करें"
+    },
+    "maximize": {
+        "message": "बड़ा करें"
+    },
+    "close": {
+        "message": "बंद करें"
+    },
+    "tipBrief": {
+        "message": "आपका प्रॉम्प्ट छोटा है। आप विशेष रूप से क्या चाहते हैं, इसके बारे में अधिक विस्तार जोड़ें।"
+    },
+    "tipFormat": {
+        "message": "अपना वांछित आउटपुट स्वरूप (सूची, तालिका, चरण-दर-चरण, आदि) निर्दिष्ट करें।"
+    },
+    "tipAudience": {
+        "message": "एक अनुकूलित प्रतिक्रिया के लिए अपने लक्षित दर्शकों या विशेषज्ञता स्तर को परिभाषित करें।"
+    },
+    "tipConstraints": {
+        "message": "प्रतिक्रिया को केंद्रित करने के लिए बाधाएं (जैसे, शब्द गणना, बजट, समय सीमा) जोड़ें।"
+    },
+    "tipContext": {
+        "message": "अधिक प्रासंगिक सुझावों के लिए अपनी स्थिति के बारे में संदर्भ जोड़ें।"
+    },
+    "tipExamples": {
+        "message": "AI प्रतिक्रिया को निर्देशित करने के लिए आप जो खोज रहे हैं उसके उदाहरण शामिल करें।"
+    },
+    "tipRole": {
+        "message": "गहरी प्रतिक्रियाओं के लिए एक विशेषज्ञ भूमिका (जैसे, 'पोषण विशेषज्ञ के रूप में कार्य करें...') असाइन करें।"
+    },
+    "tipDefault": {
+        "message": "आप जो चाहते हैं उसके बारे में विशिष्ट रहें — अस्पष्ट प्रॉम्प्ट को अस्पष्ट उत्तर मिलते हैं।"
+    },
+    "toastPerfected": {
+        "message": "✨ प्रॉम्प्ट बिल्कुल सही!"
+    },
+    "toastRate": {
+        "message": "क्या आपको यह पसंद आया? हमें 5-स्टार रेटिंग दें!"
+    },
+    "rateBtn": {
+        "message": "रेटिंग दें"
+    },
+    "rateSuccess": {
+        "message": "आपके समर्थन के लिए धन्यवाद!"
+    }
+}

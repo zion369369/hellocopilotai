@@ -1,0 +1,80 @@
+{
+    "appName": {
+        "message": "Hello World GPT - Inteligencia invisible"
+    },
+    "appDesc": {
+        "message": "Optimice sus prompts de IA con inteligencia estructural. Preserva la intención, añade claridad. Privacidad y rendimiento de nivel Google."
+    },
+    "enhanceTitle": {
+        "message": "Optimizar con inteligencia"
+    },
+    "previewTitle": {
+        "message": "Vista previa de inteligencia"
+    },
+    "acceptBtn": {
+        "message": "Aceptar"
+    },
+    "editBtn": {
+        "message": "Editar"
+    },
+    "rejectBtn": {
+        "message": "Rechazar"
+    },
+    "shareBtn": {
+        "message": "Compartir"
+    },
+    "promptCoPilot": {
+        "message": "Copiloto de Prompts"
+    },
+    "promptScore": {
+        "message": "Puntaje de Prompt"
+    },
+    "aiThinking": {
+        "message": "IA pensando..."
+    },
+    "minimize": {
+        "message": "Minimizar"
+    },
+    "maximize": {
+        "message": "Maximizar"
+    },
+    "close": {
+        "message": "Cerrar"
+    },
+    "tipBrief": {
+        "message": "Su prompt es breve. Añada más detalles sobre lo que necesita específicamente."
+    },
+    "tipFormat": {
+        "message": "Especifique el formato de salida deseado (lista, tabla, paso a paso, etc.)."
+    },
+    "tipAudience": {
+        "message": "Defina su público objetivo o nivel de experiencia para una respuesta a medida."
+    },
+    "tipConstraints": {
+        "message": "Añada restricciones (por ejemplo, recuento de palabras, presupuesto, plazo) para enfocar la respuesta."
+    },
+    "tipContext": {
+        "message": "Añada contexto sobre su situación para obtener sugerencias más relevantes."
+    },
+    "tipExamples": {
+        "message": "Incluya ejemplos de lo que está buscando para guiar la respuesta de la IA."
+    },
+    "tipRole": {
+        "message": "Asigne un rol experto (por ejemplo, 'Actúe como nutricionista...') para obtener respuestas más profundas."
+    },
+    "tipDefault": {
+        "message": "Sea específico sobre lo que necesita — los prompts vagos obtienen respuestas vagas."
+    },
+    "toastPerfected": {
+        "message": "✨ ¡Prompt perfeccionado!"
+    },
+    "toastRate": {
+        "message": "¿Le gusta el resultado? ¡Denos 5 estrellas!"
+    },
+    "rateBtn": {
+        "message": "CALIFICAR"
+    },
+    "rateSuccess": {
+        "message": "¡Gracias por su apoyo!"
+    }
+}

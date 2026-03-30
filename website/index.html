@@ -1,158 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hellocopilotai</title>
+    <title>Hello Copilot AI - Superior Intelligence</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=4.0.0">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=7.0.0">
 </head>
-
-<body class="light-theme">
+<body>
     <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-top">
-                <div class="sidebar-orb"></div>
-                <div class="sidebar-icon active" title="Home">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        <polyline points="9 22 9 12 15 12 15 22" />
-                    </svg>
-                </div>
-                <div class="sidebar-icon" title="Notebook">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                    </svg>
-                </div>
-                <div class="sidebar-icon" id="skills-hub-btn" title="Skills Hub (Registry)">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <polygon
-                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                    </svg>
-                </div>
+        <!-- Premium Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="https://scontent.fdac20-1.fna.fbcdn.net/v/t39.30808-1/657582724_26564440456515340_6728634986172869669_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=111&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=1sM8UOnxV8kQ7kNvwHRxpuy&_nc_oc=AdpWS43K4xg5uM79m-F924BEF9pi0exwImDUe16J3sgd9TLVzaO80Qm22xaJ5fXQAL0&_nc_zt=24&_nc_ht=scontent.fdac20-1.fna&_nc_gid=Gr3rQnifcxCw8OfNiZ1TnQ&_nc_ss=7a32e&oh=00_AfxptpNKduBKyAntGMXmkPoF3oILeEaaOw1c0zxmTghE4A&oe=69C9C7B7" alt="Hello Copilot" class="logo-img-header">
+                <span class="logo-text">Hello Copilot</span>
             </div>
-            <div class="sidebar-bottom">
-                <div class="sidebar-avatar" id="user-profile">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                    </svg>
+
+            <nav class="nav-section">
+                <div class="nav-item active" id="new-chat-btn">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                    <span>New Chat</span>
+                </div>
+                <div class="nav-item" id="history-btn">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5M12 7v5l4 2"/></svg>
+                    <span>History</span>
+                </div>
+                <div class="nav-item" id="skills-hub-btn">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <span>Skills Hub</span>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <span>My Account</span>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Content -->
+        <!-- Main Workspace -->
         <main class="main-content">
             <div class="chat-wrapper" id="chat-wrapper">
                 <div class="welcome-section" id="welcome-section">
-                    <h1 class="welcome-text">Hey, nice to see you. What's new?</h1>
+                    <img src="https://scontent.fdac20-1.fna.fbcdn.net/v/t39.30808-1/657582724_26564440456515340_6728634986172869669_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=111&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=1sM8UOnxV8kQ7kNvwHRxpuy&_nc_oc=AdpWS43K4xg5uM79m-F924BEF9pi0exwImDUe16J3sgd9TLVzaO80Qm22xaJ5fXQAL0&_nc_zt=24&_nc_ht=scontent.fdac20-1.fna&_nc_gid=Gr3rQnifcxCw8OfNiZ1TnQ&_nc_ss=7a32e&oh=00_AfxptpNKduBKyAntGMXmkPoF3oILeEaaOw1c0zxmTghE4A&oe=69C9C7B7" alt="Hello Copilot" class="welcome-logo">
+                    <h1 class="welcome-text">Superior AI at your service.</h1>
                 </div>
                 <div class="messages-container" id="messages-container"></div>
             </div>
 
-            <!-- Input Bar -->
+            <!-- Simplified Superior Input -->
             <div class="input-container">
                 <div class="input-bar">
-                    <button class="add-btn" title="Add something">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
-                    </button>
-
-                    <div class="input-segment">
-                        <div class="mode-selector">
-                            <button class="mode-opt active" id="smart-opt">Smart</button>
-                            <button class="mode-opt" id="agent-opt">Agent</button>
-                        </div>
-
-                        <div class="model-selection-container">
-                            <button class="model-selector-btn" id="model-selector-btn">
-                                <span id="current-model-name">Gemini 3.1 Flash-Lite</span>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="6 9 12 15 18 9" />
-                                </svg>
+                    <div class="input-main">
+                        <button class="icon-btn" title="Add Image">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                        </button>
+                        <textarea id="chat-input" class="chat-input" placeholder="Message Hello Copilot..." rows="1"></textarea>
+                        <div class="action-btns">
+                            <button class="icon-btn" id="voice-btn" title="Voice Input">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
                             </button>
-                            <ul class="model-menu" id="model-menu">
-                                <li data-model="gemini-3.1-flash-lite-preview">Gemini 3.1 Flash-Lite ⚡</li>
-                                <li data-model="gemini-1.5-pro">Gemini 1.5 Pro 🧠</li>
-                                <li data-model="gemini-1.5-flash">Gemini 1.5 Flash ⚡</li>
-                            </ul>
+                            <button class="icon-btn send-btn" id="send-btn" title="Send Message">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                            </button>
                         </div>
-
-                        <div class="vertical-divider"></div>
-                        <input type="text" id="chat-input" placeholder="Message hellocopilotai" autocomplete="off">
-                    </div>
-
-                    <div class="action-segment">
-                        <button class="mic-btn" id="voice-btn" title="Voice typing">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-                                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                                <line x1="12" y1="19" x2="12" y2="23" />
-                                <line x1="8" y1="23" x2="16" y2="23" />
-                            </svg>
-                        </button>
-                        <button class="send-btn" id="send-btn" style="display: none;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="12" y1="19" x2="12" y2="5" />
-                                <polyline points="5 12 12 5 19 12" />
-                            </svg>
-                        </button>
                     </div>
                 </div>
-            </div>
-
-            <!-- Status Indicator -->
-            <div class="status-indicator">
-                <div class="pulse-dot"></div>
-                <span id="connection-status">Connected</span>
+                <div class="footer-note">Grounded in Superior Intelligence</div>
             </div>
         </main>
     </div>
 
-    <!-- Skills Hub Modal -->
+    <!-- Skills Ecosystem Modal -->
     <div class="skills-modal-overlay" id="skills-modal">
         <div class="skills-modal-content">
-            <div class="skills-modal-header">
-                <div class="skills-modal-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round" style="color:#d94bd5; margin-right:8px;">
-                        <polygon
-                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                    </svg>
-                    Community Skills Registry
-                </div>
-                <button class="skills-close-btn" id="skills-close-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
+            <div class="skills-modal-header" style="padding: 24px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="font-family: 'Outfit'; font-weight: 700; font-size: 1.5rem;">Superior AI Skills</h2>
+                <button class="icon-btn" id="skills-close-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            <div class="skills-grid" id="skills-grid">
-                <div style="color: #888; text-align: center; padding: 20px;">Fetching community skills...</div>
+            <div class="skills-grid" id="skills-grid" style="flex: 1; overflow-y: auto; padding: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+                <!-- Dynamic Content -->
             </div>
         </div>
     </div>
 
-    <script src="app.js?v=4.2.5" type="module"></script>
+    <script src="app.js?v=7.0.0" type="module"></script>
 </body>
-
 </html>

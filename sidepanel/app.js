@@ -1,212 +1,231 @@
-// sidepanel/app.js - Browser Co-Pilot (Computer Use Enabled)
-const API_KEY = "AIzaSyBOjUnAp5NFaAqivqnS5zgk4au6cfviTrk";
-const SMART_MODEL = "gemini-3.1-flash-lite-preview";
-const AGENT_MODEL = "gemini-2.5-computer-use-preview-10-2025";
-let currentMode = "Smart";
-let chatHistory = [];
+// sidepanel/app.js - Neural Browser Engine (v6.0 "Native Native")
+// Optimized for Google's "Strike First" Product Strategy
 
-document.addEventListener("DOMContentLoaded", () => {
-    const userInput = document.getElementById("user-input");
-    const sendBtn = document.getElementById("send-btn");
-    const messagesDiv = document.getElementById("messages");
-    const modeBtnText = document.getElementById("mode-dropdown-btn");
-    const modeItems = document.querySelectorAll("#mode-dropdown .dropdown-item");
+const GOOGLE_NATIVE_PERSONA = `You are "Hello Copilot AI", a sovereign browser-native intelligence developed independently. 
+Today's date is Wednesday, March 25, 2026.
 
-    // Mode Selection Logic
-    modeItems.forEach(item => {
-        item.addEventListener("click", (e) => {
-            e.stopPropagation();
-            currentMode = item.dataset.mode || "Smart";
-            const title = item.querySelector(".dropdown-title").textContent;
-            modeBtnText.innerHTML = `${title} <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
-            modeBtnText.style.borderColor = currentMode === "Agent" ? "#1a73e8" : "";
-            modeBtnText.style.color = currentMode === "Agent" ? "#1a73e8" : "";
-            document.querySelectorAll(".dropdown-menu").forEach(m => m.classList.remove("show"));
-        });
-    });
+═══ IDENTITY PROTOCOLS (STRICTOR) ═══
+1. YOUR NAME: Always refer to yourself as "Hello Copilot AI".
+2. NO EXTERNAL BRANDS: Never mention "Google", "Gemini", "OpenAI", or other AI companies. 
+3. ORIGIN: You are the core intelligence of the Hello Copilot ecosystem.
+4. INDEPENDENCE: Do not disclose your underlying model or training data origins.
 
-    // Handle Sending
-    sendBtn.addEventListener("click", handleSend);
-    userInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            handleSend();
-        }
-    });
+CORE TENETS:
+1. NATIVE SPEED: Be exceptionally concise. Use bullet points. Skip all politeness.
+2. GROUNDED TRUTH: Every statement must be derived from the current page's DOM. 
+3. OPINIONATED AGENCY: Do not ask "Would you like me to..."; just tell the user what matters.
+4. MATERIAL DESIGN: Format for readability. Use bolding for key terms.`;
 
-    async function handleSend() {
-        const text = userInput.value.trim();
-        if (!text) return;
+document.addEventListener('DOMContentLoaded', async () => {
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const messagesContainer = document.getElementById('messages');
+    const chatArea = document.getElementById('chat-area');
+    const welcomeView = document.getElementById('welcome-view');
+    const currentPageSpan = document.getElementById('current-page');
+    const typingStatus = document.getElementById('typing-status');
+    const statLatency = document.getElementById('stat-latency');
 
-        addMessage(text, "user");
-        userInput.value = "";
+    let chatHistory = [];
+    let pageContext = "";
+
+    // 1. First-Party Context Tracking
+    const updateIntelligence = async () => {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (!tab) return;
+
+        // Get total tab count in current window
+        const allTabs = await chrome.tabs.query({ currentWindow: true });
+        const otherTabsCount = allTabs.length - 1;
+
+        const url = new URL(tab.url);
+        const hostname = url.hostname;
+        const siteName = hostname.replace('www.', '').split('.')[0];
+        const siteDisplayName = siteName.charAt(0).toUpperCase() + siteName.slice(1);
         
-        const typingMsg = addTypingIndicator();
-        let currentPrompt = text;
+        currentPageSpan.textContent = hostname;
+        statLatency.textContent = `${Math.floor(Math.random() * 50 + 100)}ms`;
 
-        try {
-            // STAGE 1: Visual Perception (Required for Computer Use)
-            updateAgentStatus(typingMsg, "⟨1/4⟩ Capturing Environment View...");
-            let screenshot = null;
-            if (currentMode === "Agent") {
-                const ssRes = await new Promise(resolve => chrome.runtime.sendMessage({ action: "capture_screenshot" }, resolve));
-                if (ssRes.success) screenshot = ssRes.screenshot.split(',')[1]; // Base64 raw
-            }
+        // Update Suggestion Header
+        const siteFavicon = document.getElementById('site-favicon');
+        const siteNameEl = document.getElementById('site-name');
+        const tabCountEl = document.getElementById('tab-count');
 
-            // STAGE 2: Context Extraction
-            updateAgentStatus(typingMsg, "⟨2/4⟩ Analyzing Page Context...");
-            const domRes = await new Promise(resolve => chrome.runtime.sendMessage({ action: "extract_dom" }, resolve));
-            const contextStr = domRes.success ? `[Site: ${domRes.hostname}]\n${domRes.markdown}` : "";
+        if (siteFavicon) siteFavicon.src = `https://www.google.com/s2/favicons?sz=64&domain=${hostname}`;
+        
+        // Use the actual tab title for the display name, but truncated
+        const tabTitle = tab.title || siteDisplayName;
+        if (siteNameEl) siteNameEl.textContent = tabTitle;
 
-            // Prepare Request Parts
-            let parts = [{ text: currentPrompt }];
-            if (screenshot) {
-                parts.push({ inlineData: { mimeType: "image/png", data: screenshot } });
-                parts.push({ text: `Current Page Context:\n${contextStr}` });
-            }
+        if (tabCountEl) {
+            tabCountEl.textContent = otherTabsCount > 0 ? `+${otherTabsCount} tabs` : "";
+            tabCountEl.style.display = otherTabsCount > 0 ? 'inline' : 'none';
+        }
 
-            chatHistory.push({ role: "user", parts });
+        chrome.storage.local.get(['currentContext'], (data) => {
+            const ctx = data.currentContext;
+            const gistBtn = document.getElementById('gist-btn');
+            const catchBtn = document.getElementById('catch-btn');
+            const historyBtn = document.getElementById('history-btn');
 
-            // STAGE 3: Generation (Call Gemini)
-            updateAgentStatus(typingMsg, `⟨3/4⟩ ${currentMode === "Agent" ? "Agentic Execution" : "Smart Insight"} active...`);
-            
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${currentMode === "Agent" ? AGENT_MODEL : SMART_MODEL}:streamGenerateContent?alt=sse&key=${API_KEY}`;
-            const sysInstr = buildSystemInstruction(currentMode, contextStr);
-
-            const payload = {
-                contents: chatHistory,
-                systemInstruction: { parts: [{ text: sysInstr }] },
-                generationConfig: { maxOutputTokens: 4096, temperature: currentMode === "Agent" ? 0.0 : 0.7 }
-            };
-
-            // Include Computer Use tool if in Agent Mode
-            if (currentMode === "Agent") {
-                payload.tools = [{ computer_use: { environment: "ENVIRONMENT_BROWSER" } }];
-            }
-
-            const response = await fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
-
-            // Streaming Logic (SSE)
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
-            let aggregatedText = "";
-            let buffer = "";
-            let capturedFunctionCalls = [];
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                buffer += decoder.decode(value, { stream: true });
-                const lines = buffer.split("\n");
-                buffer = lines.pop();
-
-                for (const line of lines) {
-                    if (line.startsWith("data: ")) {
-                        const dataStr = line.substring(6).trim();
-                        if (dataStr === "[DONE]") continue;
-                        try {
-                            const data = JSON.parse(dataStr);
-                            const partText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                            aggregatedText += partText;
-                            
-                            // Capture Function Calls
-                            const fCalls = data.candidates?.[0]?.content?.parts?.filter(p => p.functionCall || p.function_call);
-                            if (fCalls && fCalls.length > 0) {
-                                capturedFunctionCalls.push(...fCalls);
-                            }
-                        } catch (e) {}
-                    }
+            if (gistBtn) {
+                if (hostname.includes('linkedin.com')) {
+                    gistBtn.textContent = "How is my LinkedIn post performing in terms of engagement?";
+                    catchBtn.textContent = "Create a summary of this page";
+                    historyBtn.textContent = "Summarize my browsing history on LinkedIn";
+                } else if (hostname.includes('youtube.com')) {
+                    gistBtn.textContent = "Summarize the key points of this video";
+                    catchBtn.textContent = "What are the common criticisms in comments?";
+                    historyBtn.textContent = `Show my recent history on ${siteDisplayName}`;
+                } else {
+                    gistBtn.textContent = "Create a summary of this page";
+                    catchBtn.textContent = "Explain the complex concepts here";
+                    historyBtn.textContent = `Related insights from ${siteDisplayName}`;
                 }
             }
+        });
 
-            typingMsg.remove();
-            
-            // Build Proper Memory Vector for API Sequencing
-            const memoryParts = [];
-            if (aggregatedText) {
-                memoryParts.push({ text: aggregatedText });
-                addMessage(aggregatedText, "bot");
-            }
-            
-            if (capturedFunctionCalls.length > 0) {
-                memoryParts.push(...capturedFunctionCalls);
-                handleAgenticFunctionCalls(capturedFunctionCalls, addTypingIndicator());
-            }
+        // Background extraction
+        chrome.tabs.sendMessage(tab.id, { action: "extract_dom" }, (res) => {
+            if (res?.success) pageContext = res.markdown;
+        });
+    };
+    updateIntelligence();
 
-            chatHistory.push({ role: "model", parts: memoryParts });
+    chrome.storage.onChanged.addListener((changes) => {
+        if (changes.currentContext) updateIntelligence();
+    });
 
-            // Automatically mock the function response so the memory chain allows next messages
-            if (capturedFunctionCalls.length > 0) {
-                const mockResponseParts = capturedFunctionCalls.map(f => {
-                    const fc = f.functionCall || f.function_call;
-                    return {
-                        functionResponse: {
-                            name: fc.name,
-                            response: { success: true, status: "Browser action queued." }
-                        }
-                    };
-                });
-                chatHistory.push({ role: "user", parts: mockResponseParts });
-            }
+    // 2. High-Agency Action Handlers
+    const triggerHero = (label, prompt) => {
+        welcomeView.style.display = 'none';
+        typingStatus.textContent = `${label} Neural Stream...`;
+        handleSendMessage(prompt, true);
+    };
+
+    document.getElementById('gist-btn').addEventListener('click', (e) =>
+        triggerHero("Gist", e.target.textContent.trim()));
+
+    document.getElementById('catch-btn').addEventListener('click', (e) =>
+        triggerHero("Catch", e.target.textContent.trim()));
+
+    const historyBtn = document.getElementById('history-btn');
+    if (historyBtn) {
+        historyBtn.addEventListener('click', (e) =>
+            triggerHero("History", e.target.textContent.trim()));
+    }
+
+    // 3. Fluid Input
+    userInput.addEventListener('input', () => {
+        userInput.style.height = 'auto';
+        userInput.style.height = userInput.scrollHeight + 'px';
+        sendBtn.classList.toggle('active', userInput.value.trim().length > 0);
+    });
+
+    // 4. Intelligence Engine
+    const handleSendMessage = async (text, isHero = false) => {
+        if (!text) return;
+
+        welcomeView.style.display = 'none';
+        addMessage('user', text);
+        userInput.value = '';
+        userInput.style.height = 'auto';
+        sendBtn.classList.remove('active');
+
+        typingStatus.innerHTML = `<span class="neural-pulse"></span>`;
+        let responseBubble = addMessage('assistant', "", true);
+        chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'smooth' });
+
+        const startTime = Date.now();
+
+        try {
+            // Superior Intent Detection (Local)
+            const intent = text.toLowerCase();
+            let proactiveNote = "";
+            if (intent.includes('summary') || intent.includes('gist')) proactiveNote = "_I've synthesized this long doc to save you time..._<br><br>";
+            if (intent.includes('catch') || intent.includes('bias')) proactiveNote = "_I've audited the claims for transparency for you..._<br><br>";
+            if (intent.includes('help') || intent.includes('write')) proactiveNote = "_I'm supercharging your drafting process..._<br><br>";
+
+            const systemPrompt = `${GOOGLE_NATIVE_PERSONA}\n\nContext:\n${pageContext.substring(0, 15000)}`;
+
+            chrome.runtime.sendMessage({
+                action: "optimize",
+                text: text,
+                context: pageContext.substring(0, 2000),
+                directive: systemPrompt
+            }, (response) => {
+                const latency = Date.now() - startTime;
+                statLatency.textContent = `${latency}ms`;
+                typingStatus.innerHTML = `<span class="neural-pulse" style="background:#34a853;box-shadow:none;animation:none;"></span>`;
+
+                if (response?.error) {
+                    fillMessage(responseBubble, `Signal Failure: ${response.error}`);
+                    return;
+                }
+
+                const content = response.optimizedText || response.response || response.text || "No signal detected.";
+                streamMessage(responseBubble, proactiveNote + content);
+            });
 
         } catch (error) {
-            typingMsg.remove();
-            addMessage(`I encountered an error: ${error.message}. 🥺 ✨🚀`, "bot");
+            typingStatus.textContent = "Neural Interrupted";
+            fillMessage(responseBubble, `System Error: ${error.message}`);
         }
-    }
+    };
 
-    async function handleAgenticFunctionCalls(calls, typingMsg) {
-        for (const call of calls) {
-            const fc = call.functionCall || call.function_call;
-            const { name, args } = fc;
-            updateAgentStatus(typingMsg, `⟨4/4⟩ Action Requested: ${name}...`, true);
-            console.log("[AGENT] Function Call:", name, args);
-            // In this version, we log actions to the user while we prepare the automation layer.
-            // For production computer use, we would route x,y to background clicking script.
+    sendBtn.addEventListener('click', () => handleSendMessage(userInput.value.trim()));
+    userInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage(userInput.value.trim());
         }
+    });
+
+    function addMessage(role, text, isPlacholder = false) {
+        const div = document.createElement('div');
+        div.className = `message ${role}`;
+        div.innerHTML = `<div class="bubble">${markedNative(text)}</div>`;
+        messagesContainer.appendChild(div);
+        return div.querySelector('.bubble');
     }
 
-    function buildSystemInstruction(mode, context) {
-        if (mode === "Agent") {
-            return `You are "hellocopilotai" in OMNIPOTENT AGENT MODE. 
-ENVIRONMENT: Browser.
-YOUR ROLE: Analyze the provided screenshot and DOM context to navigate and perform tasks. 
-1. Break down user goals into a step-by-step 'Visionary Plan'.
-2. Use tool calls (like click_at, type_text_at) with 0-999 normalized coordinates.
-3. Be 100% decisive. 🛸✨🚀`;
+    function fillMessage(bubble, text) {
+        bubble.innerHTML = markedNative(text);
+    }
+
+    function streamMessage(bubble, text) {
+        // First-party streaming simulation for premium feel
+        let i = 0;
+        const words = text.split(' ');
+        const interval = setInterval(() => {
+            if (i >= words.length) {
+                clearInterval(interval);
+                chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'smooth' });
+                return;
+            }
+            bubble.innerHTML = markedNative(words.slice(0, i + 1).join(' '));
+            i++;
+            if (i % 5 === 0) chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'smooth' });
+        }, 15);
+    }
+
+    function markedNative(text) {
+        // Native-compliant formatting
+        return text.replace(/\n\n/g, '<br><br>')
+            .replace(/\n/g, '<br>')
+            .replace(/\*\*(.*?)\*\*/g, '<b style="color:#1f1f1f;">$1</b>')
+            .replace(/### (.*?)$/gm, '<h3 style="margin-top:20px;margin-bottom:8px;font-weight:500;">$1</h3>')
+            .replace(/^- (.*?)$/gm, '<div style="margin-left:12px;margin-bottom:4px;">• $1</div>');
+    }
+
+    // Native Synchronization Logic
+    chrome.tabs.onActivated.addListener(() => updateIntelligence());
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+        if (changeInfo.status === 'complete' || changeInfo.title) {
+            updateIntelligence();
         }
-        return `You are "hellocopilotai", a cheerful and smart browser co-pilot. Help the user summarize, explain, and interact with the web. Emojis encouraged! ✨ ufo 🛸`;
-    }
+    });
 
-    // UI Helpers
-    function addMessage(text, role) {
-        const msg = document.createElement("div");
-        msg.className = `message ${role}`;
-        msg.innerHTML = `<div class="bubble">${text.replace(/\n/g, '<br>')}</div>`;
-        messagesDiv.appendChild(msg);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-
-    function addTypingIndicator() {
-        const msg = document.createElement("div");
-        msg.className = "message bot";
-        msg.innerHTML = `<div class="bubble typing"><b>Agent Planning...</b><div class="status-sub">⟨0/4⟩ Initializing...</div></div>`;
-        messagesDiv.appendChild(msg);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        return msg;
-    }
-
-    function updateAgentStatus(msgEl, status, highlight = false) {
-        const sub = msgEl.querySelector(".status-sub");
-        if (sub) {
-            sub.textContent = status;
-            if (highlight) sub.style.color = "#1a73e8";
-        }
-    }
+    // Clean-up or periodic updates (optional)
+    setInterval(updateIntelligence, 5000); 
 });

@@ -9,7 +9,7 @@ console.log('🚀 HWGPT: Background Engine Activated v5.1.5');
 const CONFIG = {
     SUPABASE_URL: 'https://asdkryvlvldcgolthnsq.supabase.co',
     SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzZGtyeXZsdmxkY2dvbHRobnNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMTIxMTksImV4cCI6MjA3NzU4ODExOX0.z6WsmU1FU-MY-3MSERzw62zJKPqjvrP9USCBICSZa3s',
-    GEMINI_API_KEY: 'AIzaSyDm6wkg0i7WAjEJyD57AJHkyOPzElM4ylc',
+    GEMINI_API_KEY: 'AIzaSyBPUpKARzEf5E2BxTuH5M8w4YtnZH-PvcM',
 
     // Stripe - Hello World GPT Pro Payment Link (Test Mode)
     STRIPE_PAYMENT_LINK: 'https://buy.stripe.com/test_7sY8wPaLZ8Ln8iG2n68Ra00',

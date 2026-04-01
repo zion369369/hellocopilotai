@@ -9,7 +9,7 @@ console.log('🚀 HWGPT: Background Engine Activated v5.1.5');
 const CONFIG = {
     SUPABASE_URL: 'https://asdkryvlvldcgolthnsq.supabase.co',
     SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzZGtyeXZsdmxkY2dvbHRobnNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMTIxMTksImV4cCI6MjA3NzU4ODExOX0.z6WsmU1FU-MY-3MSERzw62zJKPqjvrP9USCBICSZa3s',
-    GEMINI_API_KEY: 'AIzaSyBeqbSWv-Yzak5lKcAewM3xKtkCeO6G4AY',
+    GEMINI_API_KEY: 'AIzaSyDm6wkg0i7WAjEJyD57AJHkyOPzElM4ylc',
 
     // Stripe - Hello World GPT Pro Payment Link (Test Mode)
     STRIPE_PAYMENT_LINK: 'https://buy.stripe.com/test_7sY8wPaLZ8Ln8iG2n68Ra00',
@@ -18,11 +18,12 @@ const CONFIG = {
     FREE_DAILY_LIMIT: 500,
 
     // Timeouts
-    API_TIMEOUT: 4000, // 4s for live analysis
-    OPTIMIZE_TIMEOUT: 15000, // 15s for full optimization (was 45s)
+    API_TIMEOUT: 12000, 
+    OPTIMIZE_TIMEOUT: 20000, 
 
-    // Version
-    VERSION: '5.1.5'
+    // Version & Model
+    VERSION: '6.1.0',
+    MODEL: 'gemini-3-flash-preview'
 };
 
 const EDGE_FUNCTION_URL = `${CONFIG.SUPABASE_URL}/functions/v1/llm-proxy`;
@@ -58,6 +59,48 @@ let analysisController = null; // Controller to abort previous analysis requests
 // ============================================
 
 let offscreenCreated = false;
+
+// ============================================
+// CDP BRIDGE (CASPER PROTOCOL)
+// ============================================
+
+const attachedTabs = new Set();
+
+async function attachCDP(tabId) {
+    if (attachedTabs.has(tabId)) return true;
+    try {
+        await chrome.debugger.attach({ tabId }, "1.3");
+        attachedTabs.add(tabId);
+        await chrome.debugger.sendCommand({ tabId }, "Accessibility.enable");
+        await chrome.debugger.sendCommand({ tabId }, "Runtime.enable");
+        console.log(`🛡️ HWGPT: CDP Attached to tab ${tabId}`);
+        return true;
+    } catch (e) {
+        console.warn(`⚠️ HWGPT: CDP Attachment failed for ${tabId}:`, e.message);
+        return false;
+    }
+}
+
+async function sendCDPAction(tabId, method, params) {
+    await attachCDP(tabId);
+    return await chrome.debugger.sendCommand({ tabId }, method, params);
+}
+
+// Memory-Mapped AXTree Extraction (Sovereign Context)
+async function getSovereignContext(tabId) {
+    try {
+        await attachCDP(tabId);
+        const { nodes } = await chrome.debugger.sendCommand({ tabId }, "Accessibility.getFullAXTree");
+        // Distill AXTree into LLM-ready semantic map
+        return nodes.filter(n => n.name?.value || n.role?.value).map(n => ({
+            role: n.role?.value,
+            name: n.name?.value,
+            description: n.description?.value
+        })).slice(0, 100);
+    } catch (e) {
+        return [];
+    }
+}
 
 async function setupOffscreen() {
     if (offscreenCreated) return;
@@ -352,10 +395,29 @@ chrome.runtime.onConnect.addListener((port) => {
     port.onMessage.addListener(async (msg) => {
         if (msg.action === 'live-analyze') {
             try {
+                // Trigger Autonomous Mode if prefix is 'Agent:'
+                if (msg.text?.startsWith('Agent:')) {
+                    const task = msg.text.replace(/^Agent:\s*/i, '');
+                    runAutonomousTask(task);
+                    port.postMessage({ action: 'live-analyze-response', data: { analysis: { score: 100, tip: 'Autonomous Agent Activated...', suggestions: ['Monitoring execution...', 'Stabilizing browser...'] } } });
+                    return;
+                }
                 const result = await liveAnalyze(msg.text, msg.context, msg.chatContext, msg.contextHash, msg);
                 port.postMessage({ action: 'live-analyze-response', data: result });
             } catch (e) {
                 port.postMessage({ action: 'live-analyze-response', data: { error: e.message } });
+            }
+        } else if (msg.type === 'A2A_VISION_RECOVERY') {
+            try {
+                console.log('🔮 HWGPT: Performing A2A Vision Recovery...');
+                const screenshot = await captureTab();
+                const visionResult = await callVisionReasoning('Find the native AI assistant button (sparkle, magic wand, or "Help me write") in this screenshot. Return only its (x, y) coordinates on a 0-1000 scale as JSON: {"x": N, "y": N}.', screenshot);
+                
+                // Denormalize coordinates to viewport size (assuming 1440x900 as base or just return for client to adjust)
+                port.postMessage({ action: 'A2A_VISION_RECOVERY_RESPONSE', data: visionResult });
+            } catch (e) {
+                console.error('❌ HWGPT: A2A Vision Recovery failed:', e);
+                port.postMessage({ action: 'A2A_VISION_RECOVERY_RESPONSE', data: { error: e.message } });
             }
         }
     });
@@ -457,6 +519,169 @@ async function callProxy(message, model = 'grok', mode = 'chat', siteContext = '
 }
 
 // ============================================
+// SOVEREIGN VISION: COMPUTER USE ENGINE
+// ============================================
+
+async function captureTab() {
+    try {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (!tab) return null;
+        
+        // Capture as JPEG for lower token cost
+        const dataUrl = await chrome.tabs.captureVisibleTab(null, { format: 'jpeg', quality: 50 });
+        return dataUrl.split(',')[1]; // Base64 portion only
+    } catch (e) {
+        console.error('📸 Vision Error:', e);
+        return null;
+    }
+}
+
+async function runAutonomousTask(initialTask) {
+    console.log('🤖 HWGPT: Starting Autonomous Hardware-Level Task:', initialTask);
+    let stepCount = 0;
+    const maxSteps = 15;
+    const taskHistory = [];
+    
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab) return;
+    
+    // 0. Attach Casper-grade CDP Bridge
+    const tabId = tab.id;
+    await attachCDP(tabId);
+    
+    while (stepCount < maxSteps) {
+        const screenshotRaw = await captureTab();
+        const vNodes = await getSovereignContext(tabId); // semantic AXTree
+        
+        // 1. Official Computer Use Vision Call
+        const nextAction = await callVisionReasoning(initialTask, screenshotRaw, vNodes, taskHistory);
+        console.log('🔮 HWGPT: Next Hardware Action Decision:', nextAction);
+        
+        if (!nextAction || nextAction.type === 'done' || nextAction.type === 'finish') {
+            console.log('✅ HWGPT: Autonomous completion signaled.');
+            break;
+        }
+        
+        // 2. Official CDP Physical Actuation turn
+        try {
+            if (nextAction.x !== undefined && nextAction.y !== undefined) {
+                // Denormalize coordinates (Gemini 0-999 scale)
+                const x = Math.round(nextAction.x * (tab.width || 1440) / 1000);
+                const y = Math.round(nextAction.y * (tab.height || 900) / 1000);
+                
+                if (nextAction.type === 'click') {
+                    await chrome.debugger.sendCommand({ tabId }, "Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
+                    await chrome.debugger.sendCommand({ tabId }, "Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
+                } else if (nextAction.type === 'type') {
+                    // Focus first
+                    await chrome.debugger.sendCommand({ tabId }, "Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
+                    await chrome.debugger.sendCommand({ tabId }, "Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
+                    
+                    for (const char of (nextAction.value || '')) {
+                        await chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", { type: "keyDown", text: char });
+                        await chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", { type: "keyUp", text: char });
+                    }
+                    if (nextAction.enter) {
+                        await chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", { type: "keyDown", windowsVirtualKeyCode: 13 });
+                        await chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", { type: "keyUp", windowsVirtualKeyCode: 13 });
+                    }
+                }
+            } else if (nextAction.type === 'navigate') {
+                await chrome.tabs.update(tabId, { url: nextAction.value });
+            } else if (nextAction.type === 'wait') {
+                await new Promise(r => setTimeout(r, nextAction.value || 5000));
+            }
+        } catch (e) {
+            console.error('❌ HWGPT: Hardware actuation failed:', e.message);
+        }
+        
+        taskHistory.push(nextAction);
+        stepCount++;
+        
+        // 3. Stabilization for UI Refresh
+        await new Promise(r => setTimeout(r, 2500));
+    }
+    console.log('🏁 HWGPT: Hardware Task Process Finished.');
+}
+
+async function callVisionReasoning(task, screenshot, vNodes, history) {
+    const visionPrompt = `You are an Autonomous Web Agent. 
+    Goal: ${task}
+    
+    Previous Actions: ${JSON.stringify(history)}
+    
+    Use the available computer_use tools to achieve the goal based on the visual state of the browser.`;
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${CONFIG.MODEL}:generateContent?key=${CONFIG.GEMINI_API_KEY}`;
+    
+    const body = {
+        contents: [{
+            role: "user",
+            parts: [
+                { text: visionPrompt },
+                { inlineData: { mimeType: "image/jpeg", data: screenshot } }
+            ]
+        }],
+        tools: [
+            { 
+                computer_use: { 
+                    environment: "ENVIRONMENT_BROWSER" 
+                } 
+            }
+        ],
+        generationConfig: {
+            // responseMimeType is not used when calling tools
+            temperature: 0.1
+        },
+        thinking_config: { include_thoughts: true }
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const candidate = data.candidates?.[0];
+            const parts = candidate?.content?.parts || [];
+            
+            // Extract the function call from the parts
+            const functionCallPart = parts.find(p => p.function_call);
+            if (functionCallPart) {
+                const fc = functionCallPart.function_call;
+                console.log('🔮 HWGPT: Official Computer Use Action Received:', fc.name, fc.args);
+                
+                // Map official tool names to our internal LAM engine
+                return {
+                    type: fc.name === 'click_at' ? 'click' : 
+                          fc.name === 'type_text_at' ? 'type' : 
+                          fc.name === 'navigate' ? 'navigate' : 
+                          fc.name === 'wait_5_seconds' ? 'wait' : fc.name,
+                    isVisionResult: true,
+                    x: fc.args.x,
+                    y: fc.args.y,
+                    value: fc.args.text || fc.args.url,
+                    enter: fc.args.press_enter || false,
+                    reason: parts.find(p => p.text)?.text || 'Executing official tool'
+                };
+            }
+            
+            // If no function call, check for a final response text
+            const finalNode = parts.find(p => p.text);
+            if (finalNode && (finalNode.text.toLowerCase().includes('done') || finalNode.text.toLowerCase().includes('finish'))) {
+                return { type: 'done' };
+            }
+        }
+    } catch (e) {
+        console.error('❌ Vision API Error:', e);
+    }
+    return null;
+}
+
+// ============================================
 // CLOUD API - DIRECT GEMINI
 // ============================================
 
@@ -501,18 +726,32 @@ Return JSON: {"optimizedText":"the improved prompt","score":N,"tip":"one line ab
             console.log(`🚀 HWGPT: Attempting enhancement via ${currentModel.name}...`);
             const url = `https://generativelanguage.googleapis.com/${currentModel.api}/models/${currentModel.name}:generateContent?key=${CONFIG.GEMINI_API_KEY}`;
 
+            const body = {
+                contents: [{ 
+                    role: "user",
+                    parts: [{ text: enhancePrompt }] 
+                }],
+                tools: [
+                    { googleSearch: {} },
+                    { googleMaps: {} },
+                    { urlContext: {} },
+                    { fileSearch: {} }
+                ],
+                toolConfig: {
+                    includeServerSideToolInvocations: true
+                },
+                generationConfig: {
+                    maxOutputTokens: isPro ? 800 : 400,
+                    temperature: 0.2,
+                    responseMimeType: "application/json"
+                }
+            };
+
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 signal: controller.signal,
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: enhancePrompt }] }],
-                    generationConfig: {
-                        maxOutputTokens: isPro ? 600 : 400,
-                        temperature: 0.1,
-                        responseMimeType: "application/json"
-                    }
-                })
+                body: JSON.stringify(body)
             });
 
             console.log(`📡 HWGPT: ${currentModel.name} status:`, response.status);
@@ -658,19 +897,33 @@ Return JSON: {"score":N,"tip":"...","suggestions":["...","..."]}
                 console.log(`🚀 HWGPT: Analysis via ${model.name}...`);
                 const url = `https://generativelanguage.googleapis.com/${model.api}/models/${model.name}:generateContent?key=${CONFIG.GEMINI_API_KEY}`;
 
+                const body = {
+                    contents: [{ 
+                        role: "user",
+                        parts: [{ text: scorePrompt }] 
+                    }],
+                    tools: [
+                        { googleSearch: {} },
+                        { googleMaps: {} },
+                        { urlContext: {} },
+                        { fileSearch: {} }
+                    ],
+                    toolConfig: {
+                        includeServerSideToolInvocations: true
+                    },
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        temperature: 0.4,
+                        maxOutputTokens: 250,
+                        candidateCount: 1
+                    }
+                };
+
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     signal: analysisController.signal,
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: scorePrompt }] }],
-                        generationConfig: {
-                            responseMimeType: "application/json",
-                            temperature: 0.4,
-                            maxOutputTokens: 250,
-                            candidateCount: 1
-                        }
-                    })
+                    body: JSON.stringify(body)
                 });
 
                 console.log(`📡 HWGPT: ${model.name} response status:`, response.status);
@@ -1453,6 +1706,118 @@ async function linkSupabaseUser(userId, email) {
 // ============================================
 // EXTENSION LIFECYCLE
 // ============================================
+
+// Global Message Router (A2A Bridge)
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    if (msg.type === 'A2A_VISION_RECOVERY') {
+        (async () => {
+             // Find current port to send streaming status updates to sidepanel
+             try {
+                console.log('🔮 HWGPT: Global A2A Recovery Triggered via Vision.');
+                
+                // Advanced Self-Healing Loop
+                const screenshot = await captureTab();
+                
+                const visionPrompt = `Identify the exact pixel coordinates of the NATIVE AI interface on this webpage. 
+                Focus on:
+                - The "Sparkle" or "Magic Wand" icon.
+                - The "Help me write" pill in Google Docs/Gmail.
+                - The "Ask Gemini" input field at bottom right or in sidepanel.
+                Return only JSON: {"x": N, "y": N}`;
+                
+                const visionResult = await callVisionReasoning(visionPrompt, screenshot);
+                
+                if (visionResult && visionResult.x && visionResult.y) {
+                    const tabId = sender.tab.id;
+                    const url = sender.tab.url || '';
+                    
+                    // Hardware-Level Delegation
+                    if (url.includes('docs.google.com') || url.includes('mail.google.com')) {
+                        console.log('🤝 HWGPT: Enforcing Hardened Workspace Delegation...');
+                        await delegateToWorkspaceAI(tabId, visionResult, msg.prompt);
+                    } else {
+                        console.log(`🎯 HWGPT: Physical CDP Click at [${visionResult.x}, ${visionResult.y}]`);
+                        await dispatchPhysicalClick(tabId, visionResult.x, visionResult.y, sender.tab);
+                    }
+                    
+                    sendResponse({ success: true, action: visionResult });
+                } else {
+                    sendResponse({ error: 'No AI button identified in vision turn.' });
+                }
+            } catch (e) {
+                console.error('❌ HWGPT: A2A Vision Failure:', e);
+                sendResponse({ error: e.message });
+            }
+        })();
+        return true; 
+    }
+});
+
+async function dispatchPhysicalClick(tabId, rx, ry, tab) {
+    const x = Math.round(rx * (tab.width || 1440) / 1000);
+    const y = Math.round(ry * (tab.height || 900) / 1000);
+    
+    console.log(`🔎 [A2A-DIAGNOSTIC] Physical Click Mapping:
+        - Raw Normalized: [${rx}, ${ry}]
+        - Viewport Size: [${tab.width || 1440}x${tab.height || 900}]
+        - Computed Pixels: [${x}, ${y}]`);
+        
+    await attachCDP(tabId);
+    
+    try {
+        await chrome.debugger.sendCommand({ tabId }, "Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
+        await chrome.debugger.sendCommand({ tabId }, "Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
+        console.log(`✅ [A2A-DIAGNOSTIC] CDP MouseEvent Dispatched Successfully to tab ${tabId}`);
+    } catch (e) {
+        console.error(`❌ [A2A-DIAGNOSTIC] CDP MouseEvent FAILED:`, e.message);
+        throw e;
+    }
+}
+
+async function delegateToWorkspaceAI(tabId, coords, prompt) {
+    console.log(`🤝 [A2A-DIAGNOSTIC] Starting Hardened Workspace Delegation:
+        - Tab ID: ${tabId}
+        - Prompt Length: ${prompt?.length || 0} chars
+        - Target Coords: [${coords.x}, ${coords.y}]`);
+        
+    await attachCDP(tabId);
+    
+    // 1. Precise Physical Click
+    const x = Math.round(coords.x * 1440 / 1000); 
+    const y = Math.round(coords.y * 900 / 1000);
+    
+    try {
+        await chrome.debugger.sendCommand({ tabId }, "Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
+        await chrome.debugger.sendCommand({ tabId }, "Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
+        console.log(`🔘 [A2A-DIAGNOSTIC] Workspace AI Bubble Clicked.`);
+    } catch (e) {
+        console.error(`❌ [A2A-DIAGNOSTIC] Workspace Bubble Click FAILED:`, e.message);
+    }
+    
+    // 2. Wait for Google UI Stabilization
+    console.log(`⏳ [A2A-DIAGNOSTIC] Waiting 1500ms for Workspace UI to stabilize...`);
+    await new Promise(r => setTimeout(r, 1500));
+    
+    // 3. Hardware Prompt Injection (Real-Time Ghost Typing)
+    console.log(`🔡 [A2A-DIAGNOSTIC] Initiating Real-Time Hardware-Buffer Injection...`);
+    try {
+        for (const char of prompt || '') {
+            await chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", { type: "keyDown", text: char });
+            await chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", { type: "keyUp", text: char });
+            
+            // Artificial delay for human-like visual typing & buffer stabilization
+            await new Promise(r => setTimeout(r, 35));
+        }
+        console.log(`✨ [A2A-DIAGNOSTIC] Real-Time Injection COMPLETE.`);
+        
+        // 4. Press Enter to generate
+        await chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", { type: "keyDown", windowsVirtualKeyCode: 13 });
+        await chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", { type: "keyUp", windowsVirtualKeyCode: 13 });
+        console.log(`🚀 [A2A-DIAGNOSTIC] Virtual 'Enter' key dispatched. Native generation should start now.`);
+    } catch (e) {
+        console.error(`❌ [A2A-DIAGNOSTIC] Hardware Injection FAILED:`, e.message);
+    }
+}
 
 chrome.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === 'install') {

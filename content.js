@@ -220,7 +220,227 @@
                 }
             }, 5000);
 
-            console.log('💎 HWGPT: Engine Initialized v5.2 (Resilient)');
+            console.log('💎 HWGPT: Engine Initialized v6.0.0 (Sovereign LAM)');
+            this.tagDOM(); // Initial V-Node scan
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // WEBMCP: THE AGENTIC WEB BRIDGE
+        // Scans for structured Declarative and Imperative tools.
+        // ═══════════════════════════════════════════════════════════════
+        async scanWebMCP() {
+            if (isOrphaned()) return [];
+            const webMCPTools = [];
+
+            // 1. DECLARATIVE API (HTML Forms with WebMCP attributes)
+            const forms = document.querySelectorAll('form[toolname]');
+            for (const form of forms) {
+                webMCPTools.push({
+                    type: 'declarative',
+                    name: form.getAttribute('toolname'),
+                    description: form.getAttribute('tooldescription') || 'WebMCP Form Action',
+                    element: form,
+                    autoSubmit: form.hasAttribute('toolautosubmit')
+                });
+            }
+
+            // 2. IMPERATIVE API (Navigator ModelContext Preview)
+            if (window.navigator?.modelContext?.getTools) {
+                try {
+                    const jsTools = await window.navigator.modelContext.getTools();
+                    jsTools.forEach(tool => {
+                        webMCPTools.push({
+                            type: 'imperative',
+                            ...tool,
+                            isNative: true
+                        });
+                    });
+                } catch (e) {
+                    console.warn('WebMCP Imperative Scan Error:', e);
+                }
+            }
+
+            console.log(`🌐 HWGPT: WebMCP Scan Complete. Found ${webMCPTools.length} structured tools.`);
+            this.state.webMCPTools = webMCPTools;
+            return webMCPTools;
+        }
+
+        async executeWebMCP(toolName, args = {}) {
+            const tool = (this.state.webMCPTools || []).find(t => t.name === toolName);
+            if (!tool) throw new Error(`WebMCP Tool ${toolName} not found`);
+
+            if (tool.type === 'declarative') {
+                const form = tool.element;
+                for (const [key, value] of Object.entries(args)) {
+                    const input = form.querySelector(`[name="${key}"], [id="${key}"]`);
+                    if (input) {
+                        input.value = value;
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                }
+                if (tool.autoSubmit) form.submit();
+            } else if (tool.type === 'imperative') {
+                if (window.navigator?.modelContext?.callTool) {
+                    return await window.navigator.modelContext.callTool(toolName, args);
+                }
+            }
+        }
+
+        tagDOM() {
+            if (this.state.isTagging || isOrphaned()) return;
+            this.state.isTagging = true;
+            
+            this.scanWebMCP(); // Trigger WebMCP scan concurrently
+
+            const interactiveElements = this.getInteractiveElements();
+            console.log(`🎯 HWGPT: V-Node Scan Complete. Found ${interactiveElements.length} interactive nodes.`);
+            
+            this.vNodes = interactiveElements.map((el, i) => {
+                const id = i + 1;
+                el.setAttribute('hwgpt-vnode', id);
+                return { id, element: el, rect: el.getBoundingClientRect() };
+            });
+            
+            this.state.isTagging = false;
+        }
+
+        getInteractiveElements(root = document, depth = 0) {
+            if (depth > 20) return []; // Stack limit
+            let elements = [];
+            
+            // Standard DOM scan
+            const candidates = root.querySelectorAll('button, input, textarea, a, [role="button"], [role="checkbox"], [role="link"], [contenteditable="true"]');
+            const candidatesArray = Array.from(candidates);
+            
+            elements = candidatesArray.filter(el => {
+                const rect = el.getBoundingClientRect();
+                return rect.width > 0 && rect.height > 0 && window.getComputedStyle(el).visibility !== 'hidden';
+            });
+            
+            // PIERCE SHADOW DOM (Open Roots)
+            const allShadowHosts = root.querySelectorAll('*');
+            for (const host of allShadowHosts) {
+                if (host.shadowRoot) {
+                    elements = [...elements, ...this.getInteractiveElements(host.shadowRoot, depth + 1)];
+                }
+            }
+            
+            return elements;
+        }
+
+        // ══════════════════════════════════════════════════════════════╗
+        // OMNIPOTENT A2A INTERCONNECT (SPARK DETECTOR)                   ║
+        // Fuzzy detection and delegation to native AI masters.           ║
+        // ══════════════════════════════════════════════════════════════╝
+        async findNativeAI() {
+            // 1. DETERMINISTIC: Google Workspace Native (Docs/Sheets/Gmail)
+            if (window.location.hostname.includes('google.com')) {
+                const workspaceGemini = document.querySelector('textarea[aria-label="Ask Gemini"]') || 
+                                       document.querySelector('div[aria-label="Help me write"]') || 
+                                       document.querySelector('[data-tooltip*="Gemini"]');
+                if (workspaceGemini) {
+                    console.log('🤝 HWGPT: Rapid Workspace AI Native Detected.');
+                    return workspaceGemini;
+                }
+            }
+
+            // 2. SVG Pattern matching (Magic/Sparkle)
+            const sparkles = [
+                '✨', '🪄', '🤖', 'AI', 'Magic', 'Gemini', 'Copilot', 'Assistant',
+                'Help me write', 'Refine', 'Rewrite', 'Summarize'
+            ];
+            
+            const candidates = this.getInteractiveElements();
+            for (const el of candidates) {
+                const text = (el.innerText || el.ariaLabel || el.title || el.placeholder || '').toLowerCase();
+                const matched = sparkles.some(s => text.includes(s.toLowerCase()));
+                
+                if (matched) {
+                    console.log('🪄 HWGPT: Native AI Master Found (Deterministic):', el);
+                    return el;
+                }
+            }
+            
+            // FALLBACK 1: SEARCH SVGs
+            const svgs = document.querySelectorAll('svg');
+            for (const svg of svgs) {
+                if (svg.innerHTML.includes('M12 2L14.4 7.2') || svg.innerHTML.includes('sparkle')) {
+                    const host = svg.closest('button, [role="button"]');
+                    if (host) return host;
+                }
+            }
+            
+            // FINAL FALLBACK: COMPUTER USE (MULTIMODAL VISION)
+            console.log('👁️ HWGPT: Deterministic A2A failed. Activating Sovereign Vision Fallback...');
+            const visionResponse = await chrome.runtime.sendMessage({ 
+                type: 'A2A_VISION_RECOVERY', 
+                context: { url: window.location.href } 
+            });
+            
+            if (visionResponse && visionResponse.action) {
+                console.log('🔮 HWGPT: Sovereign Vision discovered native AI at:', visionResponse.action);
+                return { 
+                    type: 'coord', 
+                    x: visionResponse.action.x, 
+                    y: visionResponse.action.y,
+                    isVisionResult: true 
+                };
+            }
+            
+            return null;
+        }
+
+        async executeAction(actionManifest) {
+            const { type, target, value, delay = 500 } = actionManifest;
+            console.log(`🎬 HWGPT: Executing LAM Action [${type}] on ${target}`, value || '');
+            
+            let element = null;
+            if (actionManifest.isVisionResult) {
+                // Perform coordinate-based physical actuation (Computer Use)
+                console.log(`🎯 HWGPT: Coordinate Click at [${actionManifest.x}, ${actionManifest.y}]`);
+                this.physicalClick(actionManifest.x, actionManifest.y);
+                return;
+            }
+
+            if (typeof target === 'number') {
+                if (!this.vNodes) this.tagDOM();
+                const vNode = (this.vNodes || []).find(n => n.id === target);
+                element = vNode?.element;
+            } else {
+                element = document.querySelector(target);
+            }
+            
+            if (!element) throw new Error(`Target ${target} not found`);
+            
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            await new Promise(r => setTimeout(r, 200));
+
+            switch (type) {
+                case 'click':
+                    element.click();
+                    element.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+                    element.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+                    break;
+                case 'type':
+                    this.state.activeElement = element;
+                    this.applyText(value);
+                    break;
+                case 'wait':
+                    await new Promise(r => setTimeout(r, value || delay));
+                    break;
+                case 'enter':
+                    element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, bubbles: true }));
+                    break;
+            }
+        }
+
+        physicalClick(x, y) {
+            const el = document.elementFromPoint(x, y);
+            if (el) {
+                el.click();
+                el.dispatchEvent(new MouseEvent('mousedown', { clientX: x, clientY: y, bubbles: true }));
+                el.dispatchEvent(new MouseEvent('mouseup', { clientX: x, clientY: y, bubbles: true }));
+            }
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -235,7 +455,7 @@
                 // OpenAI / ChatGPT
                 'chatgpt.com', 'chat.openai.com', 'openai.com',
                 // Google AI
-                'gemini.google.com', 'aistudio.google.com', 'notebooklm.google.com',
+                'gemini.google.com', 'aistudio.google.com', 'notebooklm.google.com', 'docs.google.com', 'mail.google.com',
                 // Anthropic / Claude
                 'claude.ai',
                 // xAI / Grok
@@ -1536,13 +1756,13 @@
                 const label = this.shadowRoot.querySelector('.hwgpt-fab-text');
                 
                 if (intent === 'writing-draft') {
-                    label.innerText = 'Layer: Complete Draft';
+                    label.innerText = 'Sovereign: Draft Task';
                 } else if (intent === 'reply-intent') {
-                    label.innerText = 'Layer: Suggest Reply';
+                    label.innerText = 'Sovereign: Orchestrate Reply';
                 } else if (intent === 'code-logic') {
-                    label.innerText = 'Layer: Fix Logic';
+                    label.innerText = 'Sovereign: Fix Engine';
                 } else {
-                    label.innerText = 'Browser Layer';
+                    label.innerText = 'Omnipotent Agent';
                 }
             }
 
@@ -1851,6 +2071,25 @@
                         sendResponse({ success: false, error: 'No text field found. Click on a text input first.' });
                         return true;
                     }
+                }
+
+                if (request.type === 'HWGPT_TAG_AND_EXTRACT') {
+                    this.tagDOM();
+                    const simplifiedNodes = (this.vNodes || []).map(n => ({
+                        id: n.id,
+                        role: n.element.tagName,
+                        label: (n.element.innerText || n.element.ariaLabel || n.element.placeholder || '').substring(0, 100),
+                        rect: { top: n.rect.top, left: n.rect.left, width: n.rect.width, height: n.rect.height }
+                    })).slice(0, 80); // Keep it small for token efficiency
+                    sendResponse({ nodes: simplifiedNodes });
+                    return true;
+                }
+
+                if (request.type === 'EXECUTE_ACTION') {
+                    this.executeAction(request.action)
+                        .then(() => sendResponse({ success: true }))
+                        .catch(err => sendResponse({ success: false, error: err.message }));
+                    return true;
                 }
             });
         }

@@ -1,5 +1,5 @@
 // website/app.js - Superior AI Experience
-const API_KEY = 'AIzaSyBOjUnAp5NFaAqivqnS5zgk4au6cfviTrk'; 
+const API_KEY = 'AIzaSyDm6wkg0i7WAjEJyD57AJHkyOPzElM4ylc'; 
 const SUPERIOR_MODEL = "gemini-1.5-pro"; // Use Pro for Superior Intelligence
 
 document.addEventListener('DOMContentLoaded', () => {

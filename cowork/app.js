@@ -1,5 +1,5 @@
 // hello cowork - Gemini 2.5 Agentic Shared Workspace
-const API_KEY = 'AIzaSyBOjUnAp5NFaAqivqnS5zgk4au6cfviTrk';
+const API_KEY = 'AIzaSyDm6wkg0i7WAjEJyD57AJHkyOPzElM4ylc';
 const MODEL_NAME = 'gemini-2.5-computer-use-preview-10-2025';
 
 document.addEventListener('DOMContentLoaded', () => {

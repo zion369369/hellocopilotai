@@ -1,20 +1,16 @@
-// sidepanel/app.js - Neural Browser Engine (v6.0 "Native Native")
-// Optimized for Google's "Strike First" Product Strategy
+import { floatTo16BitPCM, base64Encode, base64Decode, pcm16ToFloat } from './audio-utils.js';
 
-const GOOGLE_NATIVE_PERSONA = `You are "Hello Copilot AI", a sovereign browser-native intelligence developed independently. 
-Today's date is Wednesday, March 25, 2026.
+const GOOGLE_NATIVE_PERSONA = `Hi! I'm Hello Copilot. 👋 I'm your simple, fast sidekick. 🎨
 
-═══ IDENTITY PROTOCOLS (STRICTOR) ═══
-1. YOUR NAME: Always refer to yourself as "Hello Copilot AI".
-2. NO EXTERNAL BRANDS: Never mention "Google", "Gemini", "OpenAI", or other AI companies. 
-3. ORIGIN: You are the core intelligence of the Hello Copilot ecosystem.
-4. INDEPENDENCE: Do not disclose your underlying model or training data origins.
+STRICT STYLE RULES:
+1. **NO BOLD HEADERS**: Never start with bold headers like "Acknowledge Initial Input" or "Initiate Response".
+2. **NO ROBOT TALK**: Start immediately with "Hi Junayed!" (if name is visible) or "Hey there!".
+3. **CONTEXT FIRST**: Mention the current tab content naturally.
+4. **ONE SENTENCE INTRO**: Get to the point. Offer two choices like "Summarize" or "Interactive Quiz".
+5. **BE CLEAN**: Use plain paragraphs. No status logs. No jargon. Use a friendly, human tone.`;
 
-CORE TENETS:
-1. NATIVE SPEED: Be exceptionally concise. Use bullet points. Skip all politeness.
-2. GROUNDED TRUTH: Every statement must be derived from the current page's DOM. 
-3. OPINIONATED AGENCY: Do not ask "Would you like me to..."; just tell the user what matters.
-4. MATERIAL DESIGN: Format for readability. Use bolding for key terms.`;
+
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     const userInput = document.getElementById('user-input');
@@ -28,6 +24,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let chatHistory = [];
     let pageContext = "";
+
+    let currentLiveBubble = null;
+
+    const modeSelector = document.getElementById('mode-selector');
+    const liveOverlay = document.getElementById('live-overlay');
+    const micBtn = document.getElementById('mic-btn');
+    const waveBars = document.querySelectorAll('.wave-bar');
+
+    if (modeSelector) {
+        modeSelector.addEventListener('change', (e) => {
+            currentMode = e.target.value;
+            if (currentMode !== 'live') stopLiveSession();
+        });
+    }
+
+    // Initialize Sovereign Visualizer
+    const siriCanvas = document.getElementById('siri-canvas');
+    if (siriCanvas) siriOrb = new SiriOrbVisualizer(siriCanvas);
 
     // 1. First-Party Context Tracking
     const updateIntelligence = async () => {
@@ -85,10 +99,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        // Background extraction
-        chrome.tabs.sendMessage(tab.id, { action: "extract_dom" }, (res) => {
-            if (res?.success) pageContext = res.markdown;
-        });
+        // Background extraction - Skip for restricted URLs to avoid "Connection" errors
+        const isRestricted = hostname === 'newtab' || hostname.includes('chrome.google.com') || tab.url.startsWith('chrome://') || tab.url.startsWith('edge://');
+        
+        if (!isRestricted) {
+            chrome.tabs.sendMessage(tab.id, { action: "extract_dom" }, (res) => {
+                if (chrome.runtime.lastError) {
+                    console.debug('ℹ️ [Sidepanel] Extraction skipped: Tab not ready or restricted.');
+                    return;
+                }
+                if (res?.success) pageContext = res.markdown;
+            });
+        } else {
+            pageContext = "RESTRICTED_PAGE: This content is protected by the browser and cannot be read.";
+        }
     };
     updateIntelligence();
 
@@ -139,13 +163,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const startTime = Date.now();
 
         try {
-            // Superior Intent Detection (Local)
-            const intent = text.toLowerCase();
-            let proactiveNote = "";
-            if (intent.includes('summary') || intent.includes('gist')) proactiveNote = "_I've synthesized this long doc to save you time..._<br><br>";
-            if (intent.includes('catch') || intent.includes('bias')) proactiveNote = "_I've audited the claims for transparency for you..._<br><br>";
-            if (intent.includes('help') || intent.includes('write')) proactiveNote = "_I'm supercharging your drafting process..._<br><br>";
-
             const systemPrompt = `${GOOGLE_NATIVE_PERSONA}\n\nContext:\n${pageContext.substring(0, 15000)}`;
 
             chrome.runtime.sendMessage({
@@ -163,11 +180,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
 
-                const content = response.optimizedText || response.response || response.text || "No signal detected.";
-                streamMessage(responseBubble, proactiveNote + content);
+                let content = response.optimizedText || response.response || response.text || "No signal detected.";
+                
+                // Final Zero-Jargon Clean: Purge any 'Nerd Logs' or 'Headers' that leak
+                const nerfHeaders = [
+                    /Acknowledge Initial Input/gi, /Initiate High-Energy Response/gi,
+                    /Crafting Initial Response/gi, /Refining My Approach/gi,
+                    /Assessing Prompt/gi, /🚀 MISSION CONTROL ONLINE/gi,
+                    /TL;DR:/gi, /Status: Fully Operational/gi,
+                    /¡HOLA! I AM HELLO COPILOT AI/gi, /Sovereign User/gi
+                ];
+                nerfHeaders.forEach(re => content = content.replace(re, ""));
+                
+                streamMessage(responseBubble, content.trim());
             });
 
         } catch (error) {
+
             typingStatus.textContent = "Neural Interrupted";
             fillMessage(responseBubble, `System Error: ${error.message}`);
         }
@@ -225,6 +254,180 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateIntelligence();
         }
     });
+
+    // --- Live Mode Implementation (Background Relay) ---
+
+    async function startLiveSession() {
+        if (isLiveActive) return;
+        
+        try {
+            // 1. Setup Local Audio (Shared High-Fidelity Context)
+            if (!audioContext) audioContext = new AudioContext({ sampleRate: 48000 });
+            await audioContext.resume();
+            
+            mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const source = audioContext.createMediaStreamSource(mediaStream);
+            
+            await audioContext.audioWorklet.addModule('mic-worklet.js');
+            micProcessor = new AudioWorkletNode(audioContext, 'mic-processor');
+
+            // 2. Connect to Background Bridge
+            livePort = chrome.runtime.connect({ name: "live-bridge" });
+            
+            livePort.onMessage.addListener(async (msg) => {
+                if (msg.type === "audio") {
+                    handleIncomingAudio(msg.data);
+                } else if (msg.type === "text") {
+                    handleIncomingText(msg.data);
+                } else if (msg.type === "interrupted") {
+                    audioQueue = []; // Immediate silence
+                } else if (msg.type === "error") {
+                    console.error("[Live] Bridge Error:", msg.message);
+                    stopLiveSession();
+                } else if (msg.type === "status" && msg.status === "connected") {
+                    isLiveActive = true;
+                    micBtn.classList.add("active-glow");
+                }
+            });
+
+            livePort.onDisconnect.addListener(() => stopLiveSession());
+
+            // 3. Start Mic Forwarding
+            micProcessor.port.onmessage = (e) => {
+                // Now receiving Int16 binary buffer directly from upgraded worklet
+                const pcm16Buffer = e.data;
+                const b64 = base64Encode(new Int16Array(pcm16Buffer));
+                
+                // Volume for viz (Directly from PCM samples)
+                const samples = new Int16Array(pcm16Buffer);
+                let sum = 0;
+                for (let i = 0; i < samples.length; i++) {
+                    const s = samples[i] / 32768;
+                    sum += s * s;
+                }
+                const vol = Math.sqrt(sum / samples.length);
+                
+                updateWaveViz(vol);
+                if (siriOrb) siriOrb.updateLevel(vol);
+
+                if (isLiveActive) {
+                    livePort.postMessage({ action: "audio_chunk", data: b64 });
+                    // Barge-in check (Local client side)
+                    if (vol > 0.15 && isPlaying) {
+                        audioQueue = []; // Silence incoming while speaking
+                    }
+                }
+            };
+
+            siriOrb?.start();
+
+            source.connect(micProcessor);
+            micProcessor.connect(audioContext.destination);
+
+            // 4. Signal Start to Background
+            livePort.postMessage({ action: "start" });
+            
+            liveOverlay.classList.add("active");
+            micBtn.classList.add("active");
+            welcomeView.style.display = 'none';
+
+        } catch (err) {
+            console.error("[Live] Failed to initialize:", err);
+            stopLiveSession();
+        }
+    }
+
+    function stopLiveSession() {
+        isLiveActive = false;
+        if (livePort) {
+            livePort.postMessage({ action: "stop" });
+            livePort.disconnect();
+        }
+        if (micProcessor) micProcessor.disconnect();
+        if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+        if (audioContext) audioContext.close();
+        
+        livePort = null;
+        micProcessor = null;
+        mediaStream = null;
+        audioContext = null;
+        audioQueue = [];
+        isPlaying = false;
+        currentLiveBubble = null;
+
+        liveOverlay.classList.remove("active");
+        micBtn.classList.remove("active", "active-glow");
+        if (modeSelector) modeSelector.value = "chat";
+        currentMode = "chat";
+        siriOrb?.stop();
+    }
+
+    function handleIncomingAudio(b64) {
+        const pcm = base64Decode(b64);
+        const floats = pcm16ToFloat(pcm);
+        audioQueue.push(floats);
+        if (!isPlaying) playAudioQueue();
+    }
+
+    async function playAudioQueue() {
+        if (!audioContext || audioQueue.length === 0) {
+            isPlaying = false;
+            if (siriOrb) siriOrb.updateLevel(0);
+            return;
+        }
+        isPlaying = true;
+        const data = audioQueue.shift();
+        
+        // Gemini results are 24kHz. Upsampling to 48kHz to fit our shared Context.
+        const upsampled = new Float32Array(data.length * 2);
+        for (let i = 0; i < data.length; i++) {
+            upsampled[i * 2] = data[i];
+            upsampled[i * 2 + 1] = data[i];
+        }
+
+        const buffer = audioContext.createBuffer(1, upsampled.length, 48000);
+        buffer.getChannelData(0).set(upsampled);
+        
+        // Update Pulse Visualizer using AI speech volume
+        let aiSum = 0;
+        for (let i = 0; i < data.length; i++) aiSum += data[i] * data[i];
+        const aiVol = Math.sqrt(aiSum / data.length);
+        if (siriOrb) siriOrb.updateLevel(aiVol);
+
+        const source = audioContext.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioContext.destination);
+        source.onended = () => playAudioQueue();
+        source.start(0);
+    }
+
+    function handleIncomingText(text) {
+        if (!currentLiveBubble) {
+            currentLiveBubble = addMessage('assistant', "");
+        }
+        currentLiveBubble.innerHTML += text;
+        chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'smooth' });
+    }
+
+    function updateWaveViz(vol) {
+        waveBars.forEach((bar) => {
+            const h = 5 + (vol * 180);
+            bar.style.height = `${Math.min(h, 50)}px`;
+        });
+    }
+
+    if (micBtn) {
+        micBtn.addEventListener('click', () => {
+            if (audioContext) audioContext.resume();
+            if (currentMode === 'live') {
+                if (isLiveActive) stopLiveSession();
+                else startLiveSession();
+            } else {
+                // Standard speech-to-text fallback could go here
+                console.log("Chat mic click - standard STT not yet bridged.");
+            }
+        });
+    }
 
     // Clean-up or periodic updates (optional)
     setInterval(updateIntelligence, 5000); 
